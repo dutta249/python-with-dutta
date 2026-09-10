@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Types — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  hr{border:none; border-top:1px solid var(--border); margin:32px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 2 · Python Basics</span>
+  </div>
+
+  <h1>Python Data Types</h1>
+  <p class="lede">100 Days of Python — Day 3. Basic types, edge cases around integers and floats, and the four container types, tested interactively in a Jupyter Notebook.</p>
+
+  <h2>Overview</h2>
+  <p>This session covers the fundamental <strong>data types in Python</strong>, tested interactively in a Jupyter Notebook. Python organizes its data types into three broad categories, and this note walks through each of the <strong>Basic Types</strong> with hands-on examples of behavior/edge cases (especially around integers and floats), followed by <strong>Container Types</strong>.</p>
+
+  <h2>Key Concepts</h2>
+  <p>Python supports 3 categories of data types:</p>
+  <table>
+    <tr><th>Category</th><th>Types Included</th></tr>
+    <tr><td><strong>Basic Types</strong></td><td>integer, float, complex, boolean, string</td></tr>
+    <tr><td><strong>Container Types</strong></td><td>list, tuple, set, dictionary</td></tr>
+    <tr><td><strong>User-defined Types</strong></td><td>class</td></tr>
+  </table>
+
+  <h2>Detailed Explanation</h2>
+
+  <h3>1. Integer (<code>int</code>)</h3>
+  <p>Python integers have <strong>no fixed size limit</strong> — they support arbitrary precision, unlike languages like C/Java where <code>int</code> overflows at a fixed bit-width.</p>
+  <pre><code><span class="comment"># integer</span>
+print(4)
+print(50000000000000000000000000000000000000000000000000000000000000000000000000000000000000)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">4
+50000000000000000000000000000000000000000000000000000000000000000000000000000000000000</span></code></pre>
+
+  <blockquote><strong>💡 Key Point:</strong> Python <code>int</code> can grow arbitrarily large without overflow — it automatically handles big numbers.</blockquote>
+
+  <p>Testing with scientific notation:</p>
+  <pre><code>print(4)
+print(1e308)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">4
+1e+307</span></code></pre>
+  <div class="warn">⚠️ Screenshot text unclear — the output shown was <code>1e+307</code> even though the input was <code>1e308</code>; note that <code>1e308</code> in Python is actually parsed as a <strong>float</strong> (scientific notation literals are always floats, not ints), which is why the behavior differs from a plain integer.</div>
+
+  <pre><code>print(4)
+print(1e309)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">4
+inf</span></code></pre>
+  <blockquote><strong>⚠️ Important:</strong> <code>1e309</code> exceeds the maximum value a Python float can represent, so it overflows to <code>inf</code> (infinity).</blockquote>
+
+  <h3>2. Float (<code>float</code>)</h3>
+  <p>Floats have a <strong>maximum representable value</strong> (~1.7 × 10³⁰⁸). Beyond that, floats overflow to <code>inf</code>.</p>
+  <pre><code><span class="comment"># float</span>
+print(4.5)
+print(1.7e308)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">4.5
+1.7e+308</span></code></pre>
+  <blockquote><strong>💡 Key Point:</strong> <code>1.7e308</code> is approximately the <strong>maximum value a Python float can hold</strong>. Going beyond it (e.g., <code>1e309</code>) results in <code>inf</code>.</blockquote>
+
+  <h3>3. Boolean (<code>bool</code>)</h3>
+  <pre><code><span class="comment"># boolean</span>
+print(True)
+print(False)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">True
+False</span></code></pre>
+
+  <h3>4. Complex (<code>complex</code>)</h3>
+  <pre><code><span class="comment"># complex</span>
+print(4+5j)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">(4+5j)</span></code></pre>
+  <blockquote>Complex numbers in Python are written with a <code>j</code> suffix representing the imaginary part.</blockquote>
+
+  <h3>5. String (<code>str</code>)</h3>
+  <p>Strings can be declared using single quotes, double quotes, or triple quotes — all produce the same result.</p>
+  <pre><code><span class="comment"># string</span>
+print('Kolkata')
+print("Kolkata")
+print("""Kolkata""")</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">Kolkata
+Kolkata
+Kolkata</span></code></pre>
+  <blockquote><strong>💡 Key Point:</strong> Triple quotes (<code>"""..."""</code>) are typically used for multi-line strings or docstrings, but work the same as single/double quotes for simple one-line strings.</blockquote>
+
+  <h3>6. List (<code>list</code>)</h3>
+  <p>Ordered, <strong>mutable</strong> collection — defined with square brackets <code>[]</code>.</p>
+  <pre><code><span class="comment"># list</span>
+print([1,2,3,4,5])</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">[1, 2, 3, 4, 5]</span></code></pre>
+
+  <h3>7. Tuple (<code>tuple</code>)</h3>
+  <p>Ordered, <strong>immutable</strong> collection — defined with parentheses <code>()</code>.</p>
+  <pre><code><span class="comment"># tuple</span>
+print((1,2,3,4,5))</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">(1, 2, 3, 4, 5)</span></code></pre>
+
+  <h3>8. Set (<code>set</code>)</h3>
+  <p>Unordered collection of <strong>unique</strong> elements — defined with curly braces <code>{}</code>.</p>
+  <pre><code><span class="comment"># sets</span>
+print({1,2,3,4,5})</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">{1, 2, 3, 4, 5}</span></code></pre>
+
+  <h3>9. Dictionary (<code>dict</code>)</h3>
+  <p>Key-value pair collection — defined with curly braces <code>{}</code> using <code>key: value</code> syntax.</p>
+  <pre><code><span class="comment"># dict</span>
+print({"Name":"Nitish","Age":30,"gender":"Male"})</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">{'Name': 'Nitish', 'Age': 30, 'gender': 'Male'}</span></code></pre>
+
+  <h2>Commands / Syntax Summary</h2>
+  <pre><code><span class="comment"># Basic Types</span>
+print(4)                <span class="comment"># int</span>
+print(4.5)               <span class="comment"># float</span>
+print(True)               <span class="comment"># bool</span>
+print(4+5j)                <span class="comment"># complex</span>
+print('Kolkata')            <span class="comment"># str</span>
+
+<span class="comment"># Container Types</span>
+print([1,2,3,4,5])          <span class="comment"># list  -> mutable, ordered</span>
+print((1,2,3,4,5))          <span class="comment"># tuple -> immutable, ordered</span>
+print({1,2,3,4,5})          <span class="comment"># set   -> unordered, unique values</span>
+print({"Name":"Nitish"})    <span class="comment"># dict  -> key-value pairs</span></code></pre>
+
+  <h2>Important Points</h2>
+  <ul>
+    <li><strong>Integers</strong> in Python are of arbitrary precision — no overflow like fixed-width int types in other languages.</li>
+    <li><strong>Floats</strong> have a maximum limit (~<code>1.7e308</code>); anything beyond that becomes <code>inf</code>.</li>
+    <li>Scientific notation literals (e.g., <code>1e308</code>) are treated as <strong>floats</strong>, not ints.</li>
+    <li><strong>Strings</strong> can use single <code>'...'</code>, double <code>"..."</code>, or triple <code>"""..."""</code> quotes interchangeably for simple strings.</li>
+    <li><strong>List</strong> → mutable, ordered, allows duplicates → <code>[ ]</code></li>
+    <li><strong>Tuple</strong> → immutable, ordered, allows duplicates → <code>( )</code></li>
+    <li><strong>Set</strong> → mutable, unordered, no duplicates → <code>{ }</code></li>
+    <li><strong>Dictionary</strong> → key-value mapping → <code>{key: value}</code></li>
+  </ul>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li><code>int</code> → no size limit.</li>
+      <li><code>float</code> → max ~<code>1.7e308</code>, overflow → <code>inf</code>.</li>
+      <li><code>bool</code> → <code>True</code> / <code>False</code>.</li>
+      <li><code>complex</code> → written as <code>a+bj</code>.</li>
+      <li><code>str</code> → 3 ways to declare (single/double/triple quotes).</li>
+      <li>Container types: <code>list [ ]</code>, <code>tuple ( )</code>, <code>set { }</code> (unique), <code>dict {key: value}</code>.</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <p>Python has <strong>3 categories of data types</strong>: Basic (int, float, bool, complex, str), Container (list, tuple, set, dict), and User-defined (class).</p>
+  <ul>
+    <li><code>int</code> → no upper limit, grows arbitrarily large.</li>
+    <li><code>float</code> → capped near <code>1.7e308</code>; beyond that becomes <code>inf</code>.</li>
+    <li><code>bool</code> → <code>True</code>/<code>False</code>.</li>
+    <li><code>complex</code> → <code>a+bj</code> format.</li>
+    <li><code>str</code> → single, double, or triple quotes — same result.</li>
+    <li><code>list [ ]</code> mutable &amp; ordered | <code>tuple ( )</code> immutable &amp; ordered | <code>set { }</code> unordered &amp; unique | <code>dict {k:v}</code> key-value pairs.</li>
+  </ul>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>
