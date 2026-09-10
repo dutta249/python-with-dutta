@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Literals — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+    --err-bg:rgba(220,38,38,.06);
+    --err-border:rgba(220,38,38,.35);
+    --err-text:#b42318;
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+    --err-bg:rgba(248,113,113,.10);
+    --err-border:rgba(248,113,113,.35);
+    --err-text:#ff9a91;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  hr{border:none; border-top:1px solid var(--border); margin:32px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+  pre.err code{color:var(--err-text);}
+  pre.err{border-color:var(--err-border); background:var(--err-bg);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 2 · Python Basics</span>
+  </div>
+
+  <h1>Python Literals</h1>
+  <p class="lede">The raw values you write directly in code — numeric, string, boolean, and the special <code>None</code> — and how each one is actually represented under the hood.</p>
+
+  <h2>Overview</h2>
+  <p>A <strong>literal</strong> is raw data (a fixed value) directly given/assigned to a variable in Python. Python has four main categories of literals:</p>
+  <ul>
+    <li>Numeric Literals</li>
+    <li>String Literals</li>
+    <li>Boolean Literals</li>
+    <li>Special Literals</li>
+  </ul>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li>Literals are the actual values written in code (e.g. <code>100</code>, <code>"hello"</code>, <code>True</code>, <code>None</code>) — not variables, but what gets <em>stored in</em> variables.</li>
+    <li>Numbers can be written in different bases: binary, decimal, octal, hexadecimal.</li>
+    <li>Strings can be single/double quoted, multi-line, unicode, or raw.</li>
+    <li>Booleans (<code>True</code>/<code>False</code>) behave like numbers (<code>True</code> = 1, <code>False</code> = 0) in arithmetic.</li>
+    <li><code>None</code> is Python's special literal representing "no value".</li>
+    <li>A variable must be <strong>assigned</strong> before it can be used — referencing an undefined name raises a <code>NameError</code>.</li>
+  </ul>
+
+  <h2>1. Numeric Literals</h2>
+  <p>Python supports four numeric literal types: <strong>binary</strong>, <strong>decimal</strong>, <strong>octal</strong>, and <strong>hexadecimal</strong> integers, plus <strong>float</strong> and <strong>complex</strong> literals.</p>
+  <pre><code>a = 0b1010          <span class="comment"># Binary Literal (prefix 0b)</span>
+b = 100             <span class="comment"># Decimal Literal</span>
+c = 0o310           <span class="comment"># Octal Literal (prefix 0o)</span>
+d = 0x12c           <span class="comment"># Hexadecimal Literal (prefix 0x)</span>
+
+<span class="comment"># Float Literal</span>
+float_1 = 10.5
+float_2 = 1.5e2     <span class="comment"># scientific notation -&gt; 150.0</span>
+float_3 = 1.5e-3    <span class="comment"># scientific notation -&gt; 0.0015</span>
+
+<span class="comment"># Complex Literal</span>
+x = 3.14j           <span class="comment"># 'j' suffix denotes the imaginary part</span>
+
+print(a, b, c, d)
+print(float_1, float_2, float_3)
+print(x, x.imag, x.real)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">10 100 200 300
+10.5 150.0 0.0015
+3.14j 3.14 0.0</span></code></pre>
+
+  <h3>How to read the output</h3>
+  <table>
+    <tr><th>Variable</th><th>Literal Written</th><th>Value Printed</th><th>Notes</th></tr>
+    <tr><td><code>a</code></td><td><code>0b1010</code></td><td><code>10</code></td><td>Binary → Decimal conversion</td></tr>
+    <tr><td><code>b</code></td><td><code>100</code></td><td><code>100</code></td><td>Plain decimal</td></tr>
+    <tr><td><code>c</code></td><td><code>0o310</code></td><td><code>200</code></td><td>Octal → Decimal conversion</td></tr>
+    <tr><td><code>d</code></td><td><code>0x12c</code></td><td><code>300</code></td><td>Hex → Decimal conversion</td></tr>
+    <tr><td><code>float_1</code></td><td><code>10.5</code></td><td><code>10.5</code></td><td>Normal float</td></tr>
+    <tr><td><code>float_2</code></td><td><code>1.5e2</code></td><td><code>150.0</code></td><td><code>1.5 × 10²</code></td></tr>
+    <tr><td><code>float_3</code></td><td><code>1.5e-3</code></td><td><code>0.0015</code></td><td><code>1.5 × 10⁻³</code></td></tr>
+    <tr><td><code>x</code></td><td><code>3.14j</code></td><td><code>3.14j</code></td><td>Complex number</td></tr>
+    <tr><td><code>x.imag</code></td><td>—</td><td><code>3.14</code></td><td>Imaginary part</td></tr>
+    <tr><td><code>x.real</code></td><td>—</td><td><code>0.0</code></td><td>Real part (0 since only imaginary was given)</td></tr>
+  </table>
+
+  <blockquote><strong>Note:</strong> Even though the literals are written in binary/octal/hex, <code>print()</code> always displays the equivalent <strong>decimal</strong> value.</blockquote>
+
+  <h2>2. String Literals</h2>
+  <p>Strings can be created with single quotes, double quotes, triple quotes (multiline), unicode escapes, or as raw strings.</p>
+  <pre><code>string = 'This is Python'          <span class="comment"># single quotes</span>
+strings = "This is Python"         <span class="comment"># double quotes</span>
+char = "C"                         <span class="comment"># single character (still a string in Python)</span>
+multiline_str = """This is a multiline string with more than one line code."""
+unicode = u"\U0001f600\U0001F606\U0001F923"   <span class="comment"># unicode escape sequences (emojis)</span>
+raw_str = r"raw \n string"         <span class="comment"># raw string literal</span>
+
+print(string)
+print(strings)
+print(char)
+print(multiline_str)
+print(unicode)
+print(raw_str)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">This is Python
+This is Python
+C
+This is a multiline string with more than one line code.
+😀😆🤣
+raw \n string</span></code></pre>
+
+  <h3>Types of String Literals</h3>
+  <table>
+    <tr><th>Type</th><th>Syntax</th><th>Purpose</th></tr>
+    <tr><td>Single-quoted</td><td><code>'text'</code></td><td>Basic string</td></tr>
+    <tr><td>Double-quoted</td><td><code>"text"</code></td><td>Basic string (same as single-quoted)</td></tr>
+    <tr><td>Character</td><td><code>"C"</code></td><td>Python has no separate <code>char</code> type — a single character is just a 1-length string</td></tr>
+    <tr><td>Multiline</td><td><code>"""text"""</code> or <code>'''text'''</code></td><td>Allows string to span multiple lines</td></tr>
+    <tr><td>Unicode</td><td><code>u"\U0001f600"</code></td><td>Represents Unicode code points (e.g., emojis)</td></tr>
+    <tr><td>Raw string</td><td><code>r"raw \n string"</code></td><td>Escape sequences like <code>\n</code> are treated as <strong>literal characters</strong>, not interpreted (i.e., <code>\n</code> prints as <code>\n</code>, not a newline)</td></tr>
+  </table>
+
+  <blockquote><strong>Tip:</strong> Raw strings (<code>r"..."</code>) are very useful for regex patterns and file paths on Windows, where you don't want <code>\n</code>, <code>\t</code> etc. to be interpreted as escape sequences.</blockquote>
+
+  <h2>3. Boolean Literals</h2>
+  <p><code>True</code> and <code>False</code> are Python's Boolean literals. Internally, Python treats:</p>
+  <ul>
+    <li><code>True</code> as <code>1</code></li>
+    <li><code>False</code> as <code>0</code></li>
+  </ul>
+  <p>This means Booleans can be used directly in arithmetic operations.</p>
+  <pre><code>a = True + 4      <span class="comment"># 1 + 4</span>
+b = False + 10    <span class="comment"># 0 + 10</span>
+
+print("a:", a)
+print("b:", b)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">a: 5
+b: 10</span></code></pre>
+  <blockquote><strong>Important Point:</strong> This works because <code>bool</code> is technically a subclass of <code>int</code> in Python.</blockquote>
+
+  <h2>4. Special Literal — <code>None</code></h2>
+  <p><code>None</code> is Python's special literal used to represent the <strong>absence of a value</strong> (similar to <code>null</code> in other languages).</p>
+  <pre><code>a = None
+print(a)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">None</span></code></pre>
+
+  <h3>⚠️ Common Beginner Mistake: <code>NameError</code></h3>
+  <p>If you try to use a variable that hasn't been assigned a value yet, Python raises a <code>NameError</code>.</p>
+  <pre><code>k</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre class="err"><code>NameError: name 'k' is not defined</code></pre>
+
+  <ol>
+    <li>Running the cell with just <code>k</code> on its own — without <code>k = &lt;something&gt;</code> — caused Python to look up <code>k</code> as an already-existing name, which doesn't exist yet.</li>
+    <li>Result: <code>NameError: name 'k' is not defined</code>.</li>
+  </ol>
+
+  <div class="warn">⚠️ <strong>Key takeaway:</strong> In Python, simply "declaring" a variable name (like you might in some other languages) does nothing. A variable only comes into existence once you <strong>assign</strong> it a value, e.g. <code>k = None</code> or <code>k = 5</code>.</div>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li>Binary (<code>0b</code>), Octal (<code>0o</code>), and Hex (<code>0x</code>) literals all convert to <strong>decimal</strong> when printed.</li>
+      <li>Scientific notation (<code>1.5e2</code>) is a valid float literal format.</li>
+      <li>Complex numbers use a <code>j</code> suffix; access parts via <code>.real</code> and <code>.imag</code>.</li>
+      <li>A single character in Python is just a string of length 1 — there's no separate <code>char</code> type.</li>
+      <li>Triple quotes (<code>"""</code> or <code>'''</code>) are used for multiline strings.</li>
+      <li><code>r"..."</code> (raw string) disables escape sequence interpretation — useful for regex/paths.</li>
+      <li><code>True</code>/<code>False</code> behave as <code>1</code>/<code>0</code> in math operations.</li>
+      <li><code>None</code> represents "no value" — it is <strong>not</strong> the same as <code>0</code>, <code>False</code>, or an empty string.</li>
+      <li>Referencing a variable before assigning it raises <code>NameError: name 'x' is not defined</code>. Always assign before use.</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <p>Python literals = the four <em>kinds of raw values</em> you can write directly in code:</p>
+  <ol>
+    <li><strong>Numeric</strong> → binary (<code>0b</code>), decimal, octal (<code>0o</code>), hex (<code>0x</code>), float (incl. <code>e</code> notation), complex (<code>j</code> suffix).</li>
+    <li><strong>String</strong> → single/double quotes, multiline (<code>"""</code>), unicode escapes (<code>u"\U..."</code>), raw strings (<code>r"..."</code> — ignores <code>\n</code> etc.).</li>
+    <li><strong>Boolean</strong> → <code>True</code>/<code>False</code>, which act as <code>1</code>/<code>0</code> numerically.</li>
+    <li><strong>Special</strong> → <code>None</code>, meaning "no value assigned."</li>
+  </ol>
+  <div class="warn">⚠️ Always assign a value before using a variable, or you'll hit <code>NameError: name 'x' is not defined</code>.</div>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>

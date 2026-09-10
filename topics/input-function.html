@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The input() Function — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  hr{border:none; border-top:1px solid var(--border); margin:32px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 2 · Python Basics</span>
+  </div>
+
+  <h1>Python: Taking User Input &amp; Type Conversion</h1>
+  <p class="lede">The <code>input()</code> function always hands you back a string — even when it looks like a number. This is where that quietly breaks your math, and why.</p>
+
+  <h2>Overview</h2>
+  <p>This topic covers Python's built-in <code>input()</code> function — how it works, how to use prompts with it, and (most importantly) the fact that <strong><code>input()</code> always returns a string</strong>, no matter what the user types. This has real consequences when you try to do arithmetic on user input, which is demonstrated with a "number concatenation" bug.</p>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li><code>input()</code> reads a line of text from standard input (keyboard) and returns it as a <strong>string</strong>.</li>
+    <li>The prompt message can be passed either <strong>positionally</strong> or as a <strong>keyword argument</strong> (<code>prompt=</code>).</li>
+    <li>Even if the user types digits (like <code>56</code>), Python stores it as a <strong>string <code>'56'</code></strong>, not an integer.</li>
+    <li>Using <code>+</code> on two input strings <strong>concatenates</strong> them instead of adding them mathematically.</li>
+    <li><code>type()</code> is used to check the data type of any variable or value.</li>
+  </ul>
+
+  <h2>Detailed Explanation</h2>
+
+  <h3>1. Basic <code>input()</code> — no prompt</h3>
+  <pre><code>input()</code></pre>
+  <ul>
+    <li>Running this pauses execution and waits for the user to type something, then press Enter.</li>
+    <li>Example: user types <code>56</code> → the cell returns:</li>
+  </ul>
+  <pre><code><span class="out">Out[1]: '56'</span></code></pre>
+  <blockquote><strong>Note:</strong> Even though <code>56</code> looks like a number, it is returned as the <strong>string</strong> <code>'56'</code> (notice the quotes in the output).</blockquote>
+
+  <h3>2. Using a prompt message</h3>
+  <p>You can pass a custom prompt so the user knows what to type:</p>
+  <pre><code>input("Apna naam bata")</code></pre>
+  <ul>
+    <li>Output while waiting: <code>Apna naam bata</code> (cursor waits right after this text for the user to type)</li>
+    <li>User types: <code>Nitish</code></li>
+    <li>Result:</li>
+  </ul>
+  <pre><code><span class="out">Apna naam bataNitish
+Out[1]: 'Nitish'</span></code></pre>
+  <blockquote>Note how the prompt text and the user's typed input appear on the same line — <code>input()</code> does <strong>not</strong> automatically add a space or newline after the prompt.</blockquote>
+
+  <p>The same can be written using the <strong>keyword argument</strong> form:</p>
+  <pre><code>input(prompt="Apna naam bata")</code></pre>
+  <p>Produces the identical result: <code>Out[1]: 'Nitish'</code></p>
+
+  <h3>3. The "string concatenation" trap with numeric input</h3>
+  <p>This is the most important gotcha demonstrated in this lesson.</p>
+  <pre><code>first_num = input("Enter the first number")   <span class="comment"># user enters: 56</span>
+second_num = input("Enter the second number")  <span class="comment"># user enters: 76</span>
+
+print(first_num)   <span class="comment"># 56</span>
+print(second_num)  <span class="comment"># 76</span></code></pre>
+
+  <p>Now, adding them:</p>
+  <pre><code>result = first_num + second_num
+print(result)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">5676</span></code></pre>
+
+  <div class="warn">⚠️ <strong>This is NOT 56 + 76 = 132.</strong> Since <code>first_num</code> and <code>second_num</code> are both <strong>strings</strong> (<code>'56'</code> and <code>'76'</code>), the <code>+</code> operator performs <strong>string concatenation</strong>, not addition — so <code>'56' + '76'</code> becomes <code>'5676'</code>.</div>
+
+  <p>This demonstrates why you must <strong>convert input to the correct type</strong> (e.g., using <code>int()</code> or <code>float()</code>) before doing math with it — showing the fix, this is the natural next step (type conversion).</p>
+
+  <h3>4. Verifying types with <code>type()</code></h3>
+  <p>The lesson uses <code>type()</code> repeatedly to prove/inspect data types:</p>
+  <table>
+    <tr><th>Expression</th><th>Result</th><th>Explanation</th></tr>
+    <tr><td><code>type(4)</code></td><td><code>int</code></td><td>A plain integer literal</td></tr>
+    <tr><td><code>type(True)</code></td><td><code>bool</code></td><td>Boolean values have their own type</td></tr>
+    <tr><td><code>type([1,2,3,4])</code></td><td><code>list</code></td><td>Lists are their own type</td></tr>
+    <tr><td><code>type(first_num)</code></td><td><code>str</code></td><td>Confirms that even numeric-looking input from <code>input()</code> is a <strong>string</strong></td></tr>
+    <tr><td><code>first_num</code> (direct output)</td><td><code>'56'</code></td><td>Quotes in output confirm it's a string, not the number 56</td></tr>
+  </table>
+
+  <pre><code>type(first_num)
+<span class="comment"># Out: str</span>
+
+first_num
+<span class="comment"># Out: '56'</span></code></pre>
+
+  <h2>Commands / Syntax Summary</h2>
+  <pre><code><span class="comment"># Basic input, no prompt</span>
+value = input()
+
+<span class="comment"># Input with a prompt (positional argument)</span>
+value = input("Enter something: ")
+
+<span class="comment"># Input with a prompt (keyword argument)</span>
+value = input(prompt="Enter something: ")
+
+<span class="comment"># Checking type</span>
+type(value)   <span class="comment"># always returns &lt;class 'str'&gt; for input()</span></code></pre>
+
+  <h2>Important Points</h2>
+  <ul>
+    <li><code>input()</code> <strong>always returns a string</strong>, regardless of what the user types (numbers, True/False, etc. all become plain text).</li>
+    <li>To use the input as an actual number, you must explicitly convert it — e.g. <code>int(input("Enter a number"))</code> (this is the natural next lesson: <strong>type conversion</strong>).</li>
+    <li><code>+</code> on strings <strong>concatenates</strong>; it does <strong>not</strong> add numeric values unless both operands have first been converted to <code>int</code>/<code>float</code>.</li>
+    <li>The <code>prompt</code> parameter of <code>input()</code> can be passed positionally or by keyword (<code>prompt=</code>) — both work identically.</li>
+    <li>Use <code>type()</code> any time you're unsure what data type a variable actually holds — don't assume from appearance alone.</li>
+    <li><code>input()</code> needs an interactive frontend; it will error out in non-interactive/unsupported execution contexts.</li>
+  </ul>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li><code>input()</code> reads from the keyboard and <strong>always gives back a string</strong>.</li>
+      <li>Prompt text can go inside <code>input("...")</code> or <code>input(prompt="...")</code> — same result.</li>
+      <li>Classic beginner bug: <code>input() + input()</code> on two "numbers" glues them together as text (e.g., <code>"56" + "76"</code> → <code>"5676"</code>), it doesn't add them.</li>
+      <li><code>type()</code> is your tool to double-check what type a value really is — don't trust appearances (a number-looking string is still <code>str</code>).</li>
+      <li>Fixing the addition bug requires converting the string to a number first (e.g., <code>int()</code>), which is the natural next topic after this one.</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <p><code>input()</code> reads from the keyboard and always gives back a string. Prompt text can go inside <code>input("...")</code> or <code>input(prompt="...")</code> — same result. Classic beginner bug: <code>input() + input()</code> on two "numbers" glues them together as text instead of adding them, because both sides are strings. Use <code>type()</code> to double-check what type a value really is, and convert with <code>int()</code>/<code>float()</code> before doing math on user input.</p>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>

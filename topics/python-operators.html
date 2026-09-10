@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Operators — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+    --err-bg:rgba(220,38,38,.06);
+    --err-border:rgba(220,38,38,.35);
+    --err-text:#b42318;
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+    --err-bg:rgba(248,113,113,.10);
+    --err-border:rgba(248,113,113,.35);
+    --err-text:#ff9a91;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+  h4{font-size:.95rem; color:var(--text); margin:18px 0 8px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  hr{border:none; border-top:1px solid var(--border); margin:32px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+  pre.err code{color:var(--err-text);}
+  pre.err{border-color:var(--err-border); background:var(--err-bg);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  .example{
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    margin:16px 0;
+    background:var(--card);
+  }
+  .example h4{margin-top:0;}
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 2 · Python Basics</span>
+  </div>
+
+  <h1>Python Operators</h1>
+  <p class="lede">All 7 operator categories — arithmetic, comparison, logical, bitwise, assignment, identity, and membership — with every example run in the notebook.</p>
+
+  <h2>Overview</h2>
+  <p><strong>Operators</strong> are used to perform operations on variables and values. Python has <strong>7 categories of operators</strong>:</p>
+  <ol>
+    <li>Arithmetic operators</li>
+    <li>Comparison operators</li>
+    <li>Logical operators</li>
+    <li>Bitwise operators</li>
+    <li>Assignment operators</li>
+    <li>Identity operators</li>
+    <li>Membership operators</li>
+  </ol>
+  <p>This note walks through each category with the exact examples run in the notebook.</p>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li><code>/</code> always returns a <strong>float</strong> (true division); <code>//</code> returns <strong>floor division</strong> (integer part only).</li>
+    <li><code>**</code> is the <strong>exponentiation</strong> operator.</li>
+    <li><code>and</code>, <code>or</code>, <code>not</code> work on <strong>truthy/falsy</strong> values, not just <code>True</code>/<code>False</code>.</li>
+    <li>Bitwise operators (<code>&amp;</code>, <code>|</code>, <code>~</code>, <code>&gt;&gt;</code>, <code>&lt;&lt;</code>) work at the <strong>binary bit level</strong>.</li>
+    <li>Python has <strong>no <code>++</code>/<code>--</code></strong> — always use <code>+= 1</code> / <code>-= 1</code>.</li>
+    <li><code>is</code>/<code>is not</code> → identity (same object in memory); <code>==</code>/<code>!=</code> → value equality.</li>
+    <li><code>in</code>/<code>not in</code> → membership check inside sequences.</li>
+  </ul>
+
+  <h2>1. Arithmetic Operators</h2>
+  <p><strong>Setup:</strong> <code>x = 5</code>, <code>y = 2</code></p>
+  <table>
+    <tr><th>Operator</th><th>Expression</th><th>Result</th><th>Meaning</th></tr>
+    <tr><td><code>+</code></td><td><code>print(x + y)</code></td><td><code>7</code></td><td>Addition</td></tr>
+    <tr><td><code>-</code></td><td><code>print(x - y)</code></td><td><code>3</code></td><td>Subtraction</td></tr>
+    <tr><td><code>*</code></td><td><code>print(x * y)</code></td><td><code>10</code></td><td>Multiplication</td></tr>
+    <tr><td><code>/</code></td><td><code>print(x / y)</code></td><td><code>2.5</code></td><td>True division (always returns float)</td></tr>
+    <tr><td><code>%</code></td><td><code>print(x % y)</code></td><td><code>1</code></td><td>Modulus (remainder)</td></tr>
+    <tr><td><code>**</code></td><td><code>print(x ** y)</code></td><td><code>25</code></td><td>Exponentiation (5²)</td></tr>
+    <tr><td><code>//</code></td><td><code>print(x // 2)</code></td><td><code>2</code></td><td>Floor division (drops decimal part)</td></tr>
+  </table>
+  <pre><code>x = 5
+y = 2
+
+print(x + y)    <span class="comment"># 7</span>
+print(x - y)    <span class="comment"># 3</span>
+print(x * y)    <span class="comment"># 10</span>
+print(x / y)    <span class="comment"># 2.5</span>
+print(x % y)    <span class="comment"># 1</span>
+print(x ** y)   <span class="comment"># 25</span>
+print(x // 2)   <span class="comment"># 2</span></code></pre>
+  <blockquote>💡 <strong>Tip:</strong> <code>/</code> vs <code>//</code> — <code>/</code> gives a precise float result, <code>//</code> gives only the whole number part (rounded down, not truncated — matters for negative numbers).</blockquote>
+
+  <h2>2. Comparison (Relational) Operators</h2>
+  <p><strong>Setup:</strong> <code>x = 5</code>, <code>y = 2</code> (continued from above)</p>
+  <table>
+    <tr><th>Operator</th><th>Expression</th><th>Result</th><th>Meaning</th></tr>
+    <tr><td><code>&gt;</code></td><td><code>print(x &gt; y)</code></td><td><code>True</code></td><td>Greater than</td></tr>
+    <tr><td><code>&lt;</code></td><td><code>print(x &lt; y)</code></td><td><code>False</code></td><td>Less than</td></tr>
+    <tr><td><code>&gt;=</code></td><td><code>print(x &gt;= y)</code></td><td><code>True</code></td><td>Greater than or equal to</td></tr>
+    <tr><td><code>&lt;=</code></td><td><code>print(x &lt;= y)</code></td><td><code>False</code></td><td>Less than or equal to</td></tr>
+    <tr><td><code>==</code></td><td><code>print(x == y)</code></td><td><code>False</code></td><td>Equal to (value comparison)</td></tr>
+    <tr><td><code>!=</code></td><td><code>print(x != y)</code></td><td><code>True</code></td><td>Not equal to</td></tr>
+  </table>
+  <pre><code>print(x > y)    <span class="comment"># True</span>
+print(x < y)    <span class="comment"># False</span>
+print(x >= y)   <span class="comment"># True</span>
+print(x <= y)   <span class="comment"># False</span>
+print(x == y)   <span class="comment"># False</span>
+print(x != y)   <span class="comment"># True</span></code></pre>
+  <blockquote>⚠️ <strong>Don't confuse <code>==</code> with <code>=</code>.</strong> <code>=</code> is assignment; <code>==</code> is comparison.</blockquote>
+
+  <h2>3. Logical Operators</h2>
+  <p><strong>Setup:</strong> <code>x = True</code>, <code>y = False</code></p>
+  <table>
+    <tr><th>Operator</th><th>Expression</th><th>Result</th><th>Meaning</th></tr>
+    <tr><td><code>or</code></td><td><code>print(x or y)</code></td><td><code>True</code></td><td>True if <strong>at least one</strong> operand is True</td></tr>
+    <tr><td><code>and</code></td><td><code>print(x and y)</code></td><td><code>False</code></td><td>True only if <strong>both</strong> operands are True</td></tr>
+    <tr><td><code>not</code></td><td><code>print(not y)</code></td><td><code>True</code></td><td>Inverts the boolean value</td></tr>
+  </table>
+  <pre><code>x = True
+y = False
+
+print(x or y)   <span class="comment"># True</span>
+print(x and y)  <span class="comment"># False</span>
+print(not y)    <span class="comment"># True</span></code></pre>
+  <p><strong>Important Points:</strong></p>
+  <ul>
+    <li><code>or</code> → short-circuits and returns <code>True</code> as soon as one operand is <code>True</code>.</li>
+    <li><code>and</code> → short-circuits and returns <code>False</code> as soon as one operand is <code>False</code>.</li>
+    <li><code>not</code> → simply flips <code>True</code> ↔ <code>False</code>.</li>
+  </ul>
+
+  <h2>4. Bitwise Operators</h2>
+  <p><strong>Setup:</strong> <code>x = 2</code>, <code>y = 3</code> (binary: <code>x = 010</code>, <code>y = 011</code>)</p>
+  <table>
+    <tr><th>Operator</th><th>Expression</th><th>Result</th><th>Meaning</th></tr>
+    <tr><td><code>&amp;</code></td><td><code>print(x &amp; y)</code></td><td><code>2</code></td><td>Bitwise AND</td></tr>
+    <tr><td><code>|</code></td><td><code>print(x | y)</code></td><td><code>3</code></td><td>Bitwise OR</td></tr>
+    <tr><td><code>&gt;&gt;</code></td><td><code>print(x &gt;&gt; 2)</code></td><td><code>0</code></td><td>Right shift by 2 bits</td></tr>
+    <tr><td><code>&lt;&lt;</code></td><td><code>print(y &lt;&lt; 3)</code></td><td><code>24</code></td><td>Left shift by 3 bits</td></tr>
+    <tr><td><code>~</code></td><td><code>print(~x)</code></td><td><code>-3</code></td><td>Bitwise NOT (complement)</td></tr>
+  </table>
+  <pre><code>x = 2   <span class="comment"># binary: 010</span>
+y = 3   <span class="comment"># binary: 011</span>
+
+print(x & y)   <span class="comment"># 2   → 010 & 011 = 010</span>
+print(x | y)   <span class="comment"># 3   → 010 | 011 = 011</span>
+print(x >> 2)  <span class="comment"># 0   → shifts bits right, drops off the end</span>
+print(y << 3)  <span class="comment"># 24  → 011 << 3 = 011000 (binary) = 24</span>
+print(~x)      <span class="comment"># -3  → bitwise complement: ~x = -(x+1)</span></code></pre>
+
+  <p><strong>How each works (bit-level):</strong></p>
+  <ul>
+    <li><strong><code>&amp;</code> (AND):</strong> Compares each bit position; result bit is <code>1</code> only if <strong>both</strong> bits are <code>1</code>.
+      <pre><code>  010
+& 011
+-----
+  010   &rarr; 2</code></pre>
+    </li>
+    <li><strong><code>|</code> (OR):</strong> Result bit is <code>1</code> if <strong>either</strong> bit is <code>1</code>.
+      <pre><code>  010
+| 011
+-----
+  011   &rarr; 3</code></pre>
+    </li>
+    <li><strong><code>&gt;&gt;</code> (Right shift):</strong> Shifts all bits to the right, dropping bits off the end (equivalent to floor-dividing by <code>2^n</code>).</li>
+    <li><strong><code>&lt;&lt;</code> (Left shift):</strong> Shifts all bits to the left, filling with zeros (equivalent to multiplying by <code>2^n</code>).</li>
+    <li><strong><code>~</code> (NOT):</strong> Flips every bit; mathematically <code>~x = -(x + 1)</code>.</li>
+  </ul>
+  <blockquote>💡 <strong>Tip:</strong> Left shift by <code>n</code> ≈ multiply by <code>2ⁿ</code>; right shift by <code>n</code> ≈ floor-divide by <code>2ⁿ</code>.</blockquote>
+
+  <h2>5. Assignment Operators</h2>
+  <h3>Basic Assignment</h3>
+  <pre><code>a = 3
+print(a)
+<span class="comment"># Output: 3</span></code></pre>
+
+  <h3>Compound Assignment Operators</h3>
+  <table>
+    <tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Equivalent to</th></tr>
+    <tr><td><code>+=</code></td><td>Add and assign</td><td><code>a += 3</code></td><td><code>a = a + 3</code></td></tr>
+    <tr><td><code>-=</code></td><td>Subtract and assign</td><td><code>a -= 3</code></td><td><code>a = a - 3</code></td></tr>
+    <tr><td><code>*=</code></td><td>Multiply and assign</td><td><code>a *= 3</code></td><td><code>a = a * 3</code></td></tr>
+    <tr><td><code>&amp;=</code></td><td>Bitwise AND and assign</td><td><code>a &amp;= 3</code></td><td><code>a = a &amp; 3</code></td></tr>
+  </table>
+  <pre><code>a += 3        <span class="comment"># same as: a = a + 3</span>
+print(a)
+<span class="comment"># Output: 6   (started from a = 3)</span>
+
+a -= 3
+a *= 3
+a &= 3</code></pre>
+  <blockquote>💡 <strong>Tip:</strong> Compound assignment operators make code shorter and slightly more efficient than writing the full expression.</blockquote>
+
+  <h3>⚠️ No Increment/Decrement Operators in Python</h3>
+  <pre><code>a++
+++a</code></pre>
+  <pre class="err"><code>SyntaxError: invalid syntax</code></pre>
+  <ul>
+    <li>Python does <strong>not</strong> support <code>a++</code> or <code>++a</code> (unlike C/C++/Java).</li>
+    <li><code>++a</code> doesn't error by itself in isolation (<code>+</code> treated as unary plus applied twice), but <code>a++</code> is invalid syntax.</li>
+    <li>To increment a value, always use: <code>a += 1</code></li>
+  </ul>
+
+  <h2>6. Identity Operators (<code>is</code>, <code>is not</code>)</h2>
+  <p><strong>Purpose:</strong> Check whether two variables point to the <strong>same object in memory</strong> — not whether their values are equal.</p>
+  <table>
+    <tr><th>Expression</th><th>Meaning</th></tr>
+    <tr><td><code>a is b</code></td><td>True if <code>a</code> and <code>b</code> reference the same object</td></tr>
+    <tr><td><code>a is not b</code></td><td>True if <code>a</code> and <code>b</code> reference different objects</td></tr>
+  </table>
+
+  <div class="example">
+    <h4>Example 1 — Integers</h4>
+    <pre><code>a = 3
+b = 3
+print(a is b)
+<span class="comment"># Output: True</span></code></pre>
+    <p><strong>Why True?</strong> Python caches/interns small integers, so <code>a</code> and <code>b</code> may point to the same object in memory.</p>
+  </div>
+
+  <div class="example">
+    <h4>Example 2 — Short Strings</h4>
+    <pre><code>a = "Hello"
+b = "Hello"
+print(a is b)
+<span class="comment"># Output: True</span></code></pre>
+    <p><strong>Why True?</strong> Python interns short, simple string literals, so both variables reference the same string object.</p>
+  </div>
+
+  <div class="example">
+    <h4>Example 3 — Lists</h4>
+    <pre><code>a = [1, 2, 3]
+b = [1, 2, 3]
+print(a is b)
+<span class="comment"># Output: False</span></code></pre>
+    <p><strong>Why False?</strong> Lists are <strong>mutable</strong> — even with identical contents, <code>a</code> and <code>b</code> are separate objects. Python never interns lists.</p>
+  </div>
+
+  <div class="example">
+    <h4>Example 4 — Strings with hyphens</h4>
+    <pre><code>a = "Hello-world"
+b = "Hello-world"
+print(a is b)
+<span class="comment"># Output: False</span>
+
+print(a is not b)
+<span class="comment"># Output: True</span></code></pre>
+    <p><strong>Why False?</strong> Strings with certain characters (like <code>-</code>) are generally <strong>not interned</strong> by Python, even though the values are equal.</p>
+  </div>
+
+  <div class="warn">⚠️ <strong>Important takeaway:</strong> Use <code>==</code> to compare <strong>values</strong>, and <code>is</code> only when you need to compare <strong>object identity</strong> (e.g., <code>x is None</code>). String/int interning is a CPython implementation detail — don't rely on it in real code.</div>
+
+  <h2>7. Membership Operators (<code>in</code>, <code>not in</code>)</h2>
+  <p><strong>Purpose:</strong> Check whether a value exists within a sequence (string, list, tuple, etc.)</p>
+  <table>
+    <tr><th>Expression</th><th>Meaning</th></tr>
+    <tr><td><code>value in sequence</code></td><td>True if <code>value</code> exists in <code>sequence</code></td></tr>
+    <tr><td><code>value not in sequence</code></td><td>True if <code>value</code> does NOT exist in <code>sequence</code></td></tr>
+  </table>
+
+  <div class="example">
+    <h4>Example 1 — String membership</h4>
+    <pre><code>x = "Delhi"
+print("D" in x)
+<span class="comment"># Output: True</span></code></pre>
+  </div>
+
+  <div class="example">
+    <h4>Example 2 — String non-membership</h4>
+    <pre><code>x = "Delhi"
+print("D" not in x)
+<span class="comment"># Output: False</span></code></pre>
+  </div>
+
+  <div class="example">
+    <h4>Example 3 — List membership</h4>
+    <pre><code>x = [1, 2, 3]
+print(5 in x)
+<span class="comment"># Output: False</span></code></pre>
+  </div>
+
+  <h2>Full Operator Summary Table</h2>
+  <table>
+    <tr><th>Category</th><th>Operators</th></tr>
+    <tr><td>Arithmetic</td><td><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, <code>**</code>, <code>//</code></td></tr>
+    <tr><td>Comparison</td><td><code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>==</code>, <code>!=</code></td></tr>
+    <tr><td>Logical</td><td><code>and</code>, <code>or</code>, <code>not</code></td></tr>
+    <tr><td>Bitwise</td><td><code>&amp;</code>, <code>|</code>, <code>~</code>, <code>&gt;&gt;</code>, <code>&lt;&lt;</code></td></tr>
+    <tr><td>Assignment</td><td><code>=</code>, <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>&amp;=</code>, etc.</td></tr>
+    <tr><td>Identity</td><td><code>is</code>, <code>is not</code></td></tr>
+    <tr><td>Membership</td><td><code>in</code>, <code>not in</code></td></tr>
+  </table>
+
+  <h2>Important Points</h2>
+  <ul>
+    <li><code>/</code> → float division; <code>//</code> → floor division. Don't mix them up.</li>
+    <li><code>and</code>/<code>or</code>/<code>not</code> short-circuit — evaluation stops as soon as the result is determined.</li>
+    <li>Bitwise operators work on the <strong>binary representation</strong> of integers.</li>
+    <li><code>+=</code>, <code>-=</code>, <code>*=</code>, <code>&amp;=</code> etc. are shorthand for reassignment — there is <strong>no <code>++</code>/<code>--</code></strong> in Python.</li>
+    <li><code>is</code> compares <strong>identity</strong> (memory address); <code>==</code> compares <strong>value</strong>.</li>
+    <li>Small integers &amp; simple strings may be interned by Python → <code>is</code> can misleadingly return <code>True</code>.</li>
+    <li>Mutable objects like lists are <strong>never</strong> the same object even with identical values (unless explicitly assigned, e.g. <code>b = a</code>).</li>
+    <li><code>in</code>/<code>not in</code> work on any iterable: strings, lists, tuples, sets, dicts (checks keys).</li>
+  </ul>
+
+  <h2>Quick Revision</h2>
+  <ul>
+    <li><strong>7 operator categories:</strong> Arithmetic, Comparison, Logical, Bitwise, Assignment, Identity, Membership.</li>
+    <li><strong>Arithmetic:</strong> <code>+ - * / % ** //</code> → <code>/</code> gives float, <code>//</code> gives floor int.</li>
+    <li><strong>Comparison:</strong> <code>&gt; &lt; &gt;= &lt;= == !=</code> → returns <code>True</code>/<code>False</code>.</li>
+    <li><strong>Logical:</strong> <code>and</code> (both true), <code>or</code> (at least one true), <code>not</code> (inverts).</li>
+    <li><strong>Bitwise:</strong> <code>&amp;</code> AND, <code>|</code> OR, <code>~</code> NOT (<code>-(x+1)</code>), <code>&gt;&gt;</code> right shift (÷2ⁿ), <code>&lt;&lt;</code> left shift (×2ⁿ).</li>
+    <li><strong>Assignment:</strong> <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>&amp;=</code> = shorthand; <strong>no <code>++</code>/<code>--</code></strong> in Python — use <code>a += 1</code>.</li>
+    <li><strong>Identity (<code>is</code>/<code>is not</code>):</strong> Same object in memory, not same value. Small ints/simple strings → often interned (<code>True</code>); lists/complex strings → usually <code>False</code>.</li>
+    <li><strong>Membership (<code>in</code>/<code>not in</code>):</strong> Checks if a value exists inside a string/list/etc.</li>
+    <li><strong>Golden rule:</strong> Use <code>==</code> for value comparison, <code>is</code> only for identity checks (like <code>is None</code>).</li>
+  </ul>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>
