@@ -1,323 +1,181 @@
-# Python Operators 
+# If-Else, If-Elif-Else, and Nested If-Else in Python
+
+*Source: 100 Days of Python Programming — Day 7 (CampusX)*
 
 ## Overview
-**Operators** are used to perform operations on variables and values. Python has **7 categories of operators**:
 
-1. Arithmetic operators
-2. Comparison operators
-3. Logical operators
-4. Bitwise operators
-5. Assignment operators
-6. Identity operators
-7. Membership operators
+This topic covers three related conditional structures in Python, building up in complexity:
 
-This note walks through each category with the exact examples run in the notebook.
+1. **if-else** — a simple two-way decision (do this, or do that).
+2. **if-elif-else** — a multi-way decision with several distinct conditions checked in order.
+3. **Nested if-else** — placing an `if-else` (or `if-elif-else`) block *inside* another `if-else` block, so a second condition is only checked after a first condition has already been satisfied (or failed).
 
----
+All three are demonstrated together using a **login/authentication simulator** example, showing how the logic evolves from a basic check to a more capable, multi-step validation flow.
+
+The running example throughout is a **login/authentication simulator**:
+- Correct email: `campusx@gmail.com`
+- Correct password: `1234`
 
 ## Key Concepts
-- `/` always returns a **float** (true division); `//` returns **floor division** (integer part only).
-- `**` is the **exponentiation** operator.
-- `and`, `or`, `not` work on **truthy/falsy** values, not just `True`/`False`.
-- Bitwise operators (`&`, `|`, `~`, `>>`, `<<`) work at the **binary bit level**.
-- Python has **no `++`/`--`** — always use `+= 1` / `-= 1`.
-- `is`/`is not` → identity (same object in memory); `==`/`!=` → value equality.
-- `in`/`not in` → membership check inside sequences.
 
----
+- **if-else**: checks one condition; runs one block if it's `True`, and a different block if it's `False`. Only two possible outcomes.
+- **if-elif-else**: checks multiple conditions in sequence, each with its own `elif`; Python runs the block for the *first* condition that evaluates to `True`, and falls back to `else` only if none of them match.
+- **Nesting**: an `if`, `elif`, or `else` block can contain another complete `if-else` (or `if-elif-else`) block indented inside it.
+- Indentation controls which block a statement belongs to — Python uses indentation (not braces) to define nested scope.
+- Nesting allows **conditional retries** — e.g., if the password is wrong, ask the user to re-enter it, but only if the email was correct in the first place.
+- Combined with the `and` operator, conditions (nested or not) let you build increasingly specific checks (e.g., "email is correct **and** password is correct" vs. "email is correct **but** password is wrong").
 
-## 1. Arithmetic Operators
+## Detailed Explanation
 
-**Setup:** `x = 5`, `y = 2`
-
-| Operator | Expression | Result | Meaning |
-|----------|-----------|--------|---------|
-| `+` | `print(x + y)` | `7` | Addition |
-| `-` | `print(x - y)` | `3` | Subtraction |
-| `*` | `print(x * y)` | `10` | Multiplication |
-| `/` | `print(x / y)` | `2.5` | True division (always returns float) |
-| `%` | `print(x % y)` | `1` | Modulus (remainder) |
-| `**` | `print(x ** y)` | `25` | Exponentiation (5²) |
-| `//` | `print(x // 2)` | `2` | Floor division (drops decimal part) |
+### Version 1 — Simple if-else (single condition check)
 
 ```python
-x = 5
-y = 2
+# correct email- campusx@gmail.com
+# password - 1234
 
-print(x + y)    # 7
-print(x - y)    # 3
-print(x * y)    # 10
-print(x / y)    # 2.5
-print(x % y)    # 1
-print(x ** y)   # 25
-print(x // 2)   # 2
+email = input("Apna email bata")
+password = input("Apna passowrd bhi bata")
+
+if email == "campusx@gmail.com" and password == "1234":
+    print("Welcome")
+else:
+    print("Incorrect credentials")
 ```
 
-> 💡 **Tip:** `/` vs `//` — `/` gives a precise float result, `//` gives only the whole number part (rounded down, not truncated — matters for negative numbers).
+**How it works:**
+- Takes `email` and `password` as input from the user.
+- Uses the `and` operator so **both** conditions must be true to print `"Welcome"`.
+- If either the email or the password is wrong, it falls into the single `else` and prints `"Incorrect credentials"` — there's no way to tell the user *which* part was wrong.
 
----
+**Example run:**
+```
+Apna email bata: campusx@gmail.com
+Apna passowrd bhi bata: 1234
+Welcome
+```
 
-## 2. Comparison (Relational) Operators
+> ⚠️ **Limitation**: This version can't distinguish between "wrong email" and "correct email but wrong password" — it treats both as the same generic failure. This motivates moving to nested if-else.
 
-**Setup:** `x = 5`, `y = 2` (continued from above)
-
-| Operator | Expression | Result | Meaning |
-|----------|-----------|--------|---------|
-| `>` | `print(x > y)` | `True` | Greater than |
-| `<` | `print(x < y)` | `False` | Less than |
-| `>=` | `print(x >= y)` | `True` | Greater than or equal to |
-| `<=` | `print(x <= y)` | `False` | Less than or equal to |
-| `==` | `print(x == y)` | `False` | Equal to (value comparison) |
-| `!=` | `print(x != y)` | `True` | Not equal to |
+### Version 2 — If-Elif-Else with a Nested If-Else Inside It
 
 ```python
-print(x > y)    # True
-print(x < y)    # False
-print(x >= y)   # True
-print(x <= y)   # False
-print(x == y)   # False
-print(x != y)   # True
+# correct email- campusx@gmail.com
+# password - 1234
+
+email = input("Apna email bata")
+password = input("Apna passowrd bhi bata")
+
+if email == "campusx@gmail.com" and password == "1234":
+    print("Welcome")
+elif email == "campusx@gmail.com" and password != "1234":
+    print("Password Incorrect")
+    password = input("Password fir se bol")
+    if password == "1234":
+        print("Finally correct")
+    else:
+        print("Still incorrect")
+else:
+    print("Incorrect credentials")
 ```
 
-> ⚠️ **Don't confuse `==` with `=`.** `=` is assignment; `==` is comparison.
+**How it works — step by step:**
+This version is an **if-elif-else** structure at the top level, with a small **nested if-else** tucked inside the `elif` branch.
 
----
+1. **`if` (first condition)**: email correct **and** password correct → `"Welcome"`.
+2. **`elif` (second condition)**: email correct **but** password wrong → enters this branch.
+   - Prints `"Password Incorrect"`.
+   - Asks the user to re-enter the password with a second `input()`.
+   - **Nested if-else**: checks the *new* password.
+     - If it now matches `"1234"` → `"Finally correct"`.
+     - If it's still wrong → `"Still incorrect"`.
+3. **`else` (fallback)**: if the email itself was wrong (regardless of password) → `"Incorrect credentials"`.
 
-## 3. Logical Operators
+**Important points:**
+- The **if-elif-else** at the top handles three distinct outcomes for the *initial* attempt: fully correct, correct email/wrong password, or wrong email.
+- The **nested if-else** for the password retry is only reachable **through** the `elif` branch — i.e., only when the email was already correct. This is the core idea of nesting: an inner decision that only matters once an outer condition is met.
+- Giving the user a second chance to re-enter the password (rather than just failing immediately) is a simple example of improving user experience through nested logic.
+- The email check is done only once at the top; there's no retry logic for a wrong email in this version — it goes straight to `"Incorrect credentials"`.
 
-**Setup:** `x = True`, `y = False`
+### Version 3 — Nested If-Else Wrapping an If-Elif-Else (multi-level nesting)
 
-| Operator | Expression | Result | Meaning |
-|----------|-----------|--------|---------|
-| `or` | `print(x or y)` | `True` | True if **at least one** operand is True |
-| `and` | `print(x and y)` | `False` | True only if **both** operands are True |
-| `not` | `print(not y)` | `True` | Inverts the boolean value |
+A further extended version (seen in the full code) wraps the entire if-elif-else from Version 2 inside an **outer if-else** that first validates the email format:
 
 ```python
-x = True
-y = False
+# correct email- campusx@gmail.com
+# password - 1234
 
-print(x or y)   # True
-print(x and y)  # False
-print(not y)    # True
+email = input("Apna email bata")
+if '@' in email:
+    password = input("Apna passowrd bhi bata")
+
+    if email == "campusx@gmail.com" and password == "1234":
+        print("Welcome")
+    elif email == "campusx@gmail.com" and password != "1234":
+        print("Password Incorrect")
+        password = input("Password fir se bol")
+        if password == "1234":
+            print("Finally correct")
+        else:
+            print("Still incorrect")
+    else:
+        print("Incorrect credentials")
+else:
+    print("Email galat hai sahi likho")
 ```
 
-**Important Points:**
-- `or` → short-circuits and returns `True` as soon as one operand is `True`.
-- `and` → short-circuits and returns `False` as soon as one operand is `False`.
-- `not` → simply flips `True` ↔ `False`.
+**How this differs from Version 2:**
+- Adds an **outer if-else validation layer**: `if '@' in email:` checks whether the email even looks valid (contains `@`) **before** asking for a password at all.
+- The entire **if-elif-else** block from Version 2 (welcome / password incorrect+retry / incorrect credentials) is now **nested inside** this outer `if`, so it only runs when the email format passes.
+- If `'@'` is not in the email, the outer `else` triggers and it skips straight to `print("Email galat hai sahi likho")` (*"Email is wrong, type it correctly"*) — the password is never even asked for.
+- This demonstrates **three levels of nesting** stacked together:
+  - **Level 1 (outer if-else)**: is the email format valid?
+  - **Level 2 (if-elif-else, nested inside Level 1)**: is the email/password combo correct?
+  - **Level 3 (nested if-else, inside Level 2's `elif`)**: retry the password check.
 
----
+## Traced Example Runs (from screenshots)
 
-## 4. Bitwise Operators
+| Email entered | Password entered | Output |
+|---|---|---|
+| `campusx@gmail.com` | `1234` | `Welcome` |
+| `campusx@gmail.com` | `12535` (then re-entered `1234`) | `Password Incorrect` → `Finally correct` |
+| `campusx@gmail.com` | `315236` (then re-entered `rjyyjr`) | `Password Incorrect` → `Still incorrect` |
 
-**Setup:** `x = 2`, `y = 3` (binary: `x = 010`, `y = 011`)
-
-| Operator | Expression | Result | Meaning |
-|----------|-----------|--------|---------|
-| `&` | `print(x & y)` | `2` | Bitwise AND |
-| `\|` | `print(x \| y)` | `3` | Bitwise OR |
-| `>>` | `print(x >> 2)` | `0` | Right shift by 2 bits |
-| `<<` | `print(y << 3)` | `24` | Left shift by 3 bits |
-| `~` | `print(~x)` | `-3` | Bitwise NOT (complement) |
-
-```python
-x = 2   # binary: 010
-y = 3   # binary: 011
-
-print(x & y)   # 2   → 010 & 011 = 010
-print(x | y)   # 3   → 010 | 011 = 011
-print(x >> 2)  # 0   → shifts bits right, drops off the end
-print(y << 3)  # 24  → 011 << 3 = 011000 (binary) = 24
-print(~x)      # -3  → bitwise complement: ~x = -(x+1)
+**Trace for the "Finally correct" example:**
 ```
-
-**How each works (bit-level):**
-- **`&` (AND):** Compares each bit position; result bit is `1` only if **both** bits are `1`.
-  ```
-    010
-  & 011
-  -----
-    010   → 2
-  ```
-- **`|` (OR):** Result bit is `1` if **either** bit is `1`.
-  ```
-    010
-  | 011
-  -----
-    011   → 3
-  ```
-- **`>>` (Right shift):** Shifts all bits to the right, dropping bits off the end (equivalent to floor-dividing by `2^n`).
-- **`<<` (Left shift):** Shifts all bits to the left, filling with zeros (equivalent to multiplying by `2^n`).
-- **`~` (NOT):** Flips every bit; mathematically `~x = -(x + 1)`.
-
-> 💡 **Tip:** Left shift by `n` ≈ multiply by `2ⁿ`; right shift by `n` ≈ floor-divide by `2ⁿ`.
-
----
-
-## 5. Assignment Operators
-
-#### Basic Assignment
-```python
-a = 3
-print(a)
-# Output: 3
+Apna email bata: campusx@gmail.com
+Apna passowrd bhi bata: 12535
+Password Incorrect
+Password fir se bol: 1234
+Finally correct
 ```
+- Email matched → entered `elif` branch (password didn't match `1234` the first time).
+- Prompted again, user typed `1234` correctly this time → nested `if` triggered → `"Finally correct"`.
 
-#### Compound Assignment Operators
-| Operator | Meaning | Example | Equivalent to |
-|----------|---------|---------|---------------|
-| `+=` | Add and assign | `a += 3` | `a = a + 3` |
-| `-=` | Subtract and assign | `a -= 3` | `a = a - 3` |
-| `*=` | Multiply and assign | `a *= 3` | `a = a * 3` |
-| `&=` | Bitwise AND and assign | `a &= 3` | `a = a & 3` |
-
-```python
-a += 3        # same as: a = a + 3
-print(a)
-# Output: 6   (started from a = 3)
-
-a -= 3
-a *= 3
-a &= 3
+**Trace for the "Still incorrect" example:**
 ```
-
-> 💡 **Tip:** Compound assignment operators make code shorter and slightly more efficient than writing the full expression.
-
-### ⚠️ No Increment/Decrement Operators in Python
-```python
-a++
-++a
+Apna email bata: campusx@gmail.com
+Apna passowrd bhi bata: 315236
+Password Incorrect
+Password fir se bol: rjyyjr
+Still incorrect
 ```
-```
-SyntaxError: invalid syntax
-```
-- Python does **not** support `a++` or `++a` (unlike C/C++/Java).
-- `++a` doesn't error by itself in isolation (`+` treated as unary plus applied twice), but `a++` is invalid syntax.
-- To increment a value, always use:
-  ```python
-  a += 1
-  ```
+- Same path, but the second password attempt was also wrong → nested `else` triggered → `"Still incorrect"`.
 
----
+## Things to Remember
 
-## 6. Identity Operators (`is`, `is not`)
+- **if-else** = two-way decision: exactly one of two blocks runs.
+- **if-elif-else** = multi-way decision: Python checks conditions top to bottom and runs the block for the **first** one that's `True`; `else` only runs if none matched.
+- **Nesting** = placing a complete if-else (or if-elif-else) **inside** another one's block. The inner block only runs if the outer condition that contains it is satisfied.
+- Use `and` to combine multiple conditions in a single `if`/`elif` check (e.g., email **and** password both correct).
+- Nesting is useful for **sequential/multi-step validation** — e.g., check format first (if-else), then check correctness (if-elif-else), then allow a retry (nested if-else).
+- Be careful with **indentation** — it determines which block a line belongs to; misplaced indentation changes the logic entirely.
+- Adding retry logic (asking for input again inside a branch) is a simple, practical use of nesting to improve program flow instead of just failing outright.
+- The more you nest, the deeper the indentation — readability can suffer if nesting goes too deep (not explicitly stated in the screenshots, but implied by the structure shown).
 
-**Purpose:** Check whether two variables point to the **same object in memory** — not whether their values are equal.
+## Quick Revision
 
-| Expression | Meaning |
-|------------|---------|
-| `a is b` | True if `a` and `b` reference the same object |
-| `a is not b` | True if `a` and `b` reference different objects |
+- **if-else**: one condition, two outcomes.
+- **if-elif-else**: several conditions checked in order, first match wins.
+- **Nested if-else**: an if-else placed inside another if-else's block, so the inner check only matters once the outer condition lets execution "fall into" it.
 
-#### Example 1 — Integers
-```python
-a = 3
-b = 3
-print(a is b)
-# Output: True
-```
-**Why True?** Python caches/interns small integers, so `a` and `b` may point to the same object in memory.
-
-#### Example 2 — Short Strings
-```python
-a = "Hello"
-b = "Hello"
-print(a is b)
-# Output: True
-```
-**Why True?** Python interns short, simple string literals, so both variables reference the same string object.
-
-#### Example 3 — Lists
-```python
-a = [1, 2, 3]
-b = [1, 2, 3]
-print(a is b)
-# Output: False
-```
-**Why False?** Lists are **mutable** — even with identical contents, `a` and `b` are separate objects. Python never interns lists.
-
-#### Example 4 — Strings with hyphens
-```python
-a = "Hello-world"
-b = "Hello-world"
-print(a is b)
-# Output: False
-
-print(a is not b)
-# Output: True
-```
-**Why False?** Strings with certain characters (like `-`) are generally **not interned** by Python, even though the values are equal.
-
-> ⚠️ **Important takeaway:** Use `==` to compare **values**, and `is` only when you need to compare **object identity** (e.g., `x is None`). String/int interning is a CPython implementation detail — don't rely on it in real code.
-
----
-
-## 7. Membership Operators (`in`, `not in`)
-
-**Purpose:** Check whether a value exists within a sequence (string, list, tuple, etc.)
-
-| Expression | Meaning |
-|------------|---------|
-| `value in sequence` | True if `value` exists in `sequence` |
-| `value not in sequence` | True if `value` does NOT exist in `sequence` |
-
-#### Example 1 — String membership
-```python
-x = "Delhi"
-print("D" in x)
-# Output: True
-```
-
-#### Example 2 — String non-membership
-```python
-x = "Delhi"
-print("D" not in x)
-# Output: False
-```
-
-#### Example 3 — List membership
-```python
-x = [1, 2, 3]
-print(5 in x)
-# Output: False
-```
-
----
-
-## Full Operator Summary Table
-
-| Category | Operators |
-|----------|-----------|
-| Arithmetic | `+`, `-`, `*`, `/`, `%`, `**`, `//` |
-| Comparison | `>`, `<`, `>=`, `<=`, `==`, `!=` |
-| Logical | `and`, `or`, `not` |
-| Bitwise | `&`, `\|`, `~`, `>>`, `<<` |
-| Assignment | `=`, `+=`, `-=`, `*=`, `&=`, etc. |
-| Identity | `is`, `is not` |
-| Membership | `in`, `not in` |
-
----
-
-## Important Points
-- `/` → float division; `//` → floor division. Don't mix them up.
-- `and`/`or`/`not` short-circuit — evaluation stops as soon as the result is determined.
-- Bitwise operators work on the **binary representation** of integers.
-- `+=`, `-=`, `*=`, `&=` etc. are shorthand for reassignment — there is **no `++`/`--`** in Python.
-- `is` compares **identity** (memory address); `==` compares **value**.
-- Small integers & simple strings may be interned by Python → `is` can misleadingly return `True`.
-- Mutable objects like lists are **never** the same object even with identical values (unless explicitly assigned, e.g. `b = a`).
-- `in`/`not in` work on any iterable: strings, lists, tuples, sets, dicts (checks keys).
-
----
-
-## Quick Revision (2 min recap)
-- **7 operator categories:** Arithmetic, Comparison, Logical, Bitwise, Assignment, Identity, Membership.
-- **Arithmetic:** `+ - * / % ** //` → `/` gives float, `//` gives floor int.
-- **Comparison:** `> < >= <= == !=` → returns `True`/`False`.
-- **Logical:** `and` (both true), `or` (at least one true), `not` (inverts).
-- **Bitwise:** `&` AND, `|` OR, `~` NOT (`-(x+1)`), `>>` right shift (÷2ⁿ), `<<` left shift (×2ⁿ).
-- **Assignment:** `+=`, `-=`, `*=`, `&=` = shorthand; **no `++`/`--`** in Python — use `a += 1`.
-- **Identity (`is`/`is not`):** Same object in memory, not same value. Small ints/simple strings → often interned (`True`); lists/complex strings → usually `False`.
-- **Membership (`in`/`not in`):** Checks if a value exists inside a string/list/etc.
-- **Golden rule:** Use `==` for value comparison, `is` only for identity checks (like `is None`).
+In the login example, all three come together: the **outer if-else** validates the email format (`'@' in email`); **nested inside it**, an **if-elif-else** validates the email+password combination; and **nested inside the `elif`** (correct email, wrong password), a **third-level if-else** gives the user a second chance to type the password correctly.

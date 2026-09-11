@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>If-Else, If-Elif-Else &amp; Nested If-Else — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+  h4{font-size:.95rem; color:var(--text); margin:18px 0 8px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  .example{
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    margin:16px 0;
+    background:var(--card);
+  }
+  .example h4{margin-top:0;}
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 3 · Control Flow</span>
+  </div>
+
+  <h1>If-Else, If-Elif-Else &amp; Nested If-Else</h1>
+  <p class="lede">Three conditional structures, built up step by step through a login/authentication simulator — from a single check to three levels of nesting.</p>
+
+  <h2>Overview</h2>
+  <p>This topic covers three related conditional structures in Python, building up in complexity:</p>
+  <ol>
+    <li><strong>if-else</strong> — a simple two-way decision (do this, or do that).</li>
+    <li><strong>if-elif-else</strong> — a multi-way decision with several distinct conditions checked in order.</li>
+    <li><strong>Nested if-else</strong> — placing an <code>if-else</code> (or <code>if-elif-else</code>) block <em>inside</em> another <code>if-else</code> block, so a second condition is only checked after a first condition has already been satisfied (or failed).</li>
+  </ol>
+  <p>All three are demonstrated together using a <strong>login/authentication simulator</strong> example, showing how the logic evolves from a basic check to a more capable, multi-step validation flow.</p>
+  <p>The running example throughout is a <strong>login/authentication simulator</strong>:</p>
+  <ul>
+    <li>Correct email: <code>campusx@gmail.com</code></li>
+    <li>Correct password: <code>1234</code></li>
+  </ul>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li><strong>if-else</strong>: checks one condition; runs one block if it's <code>True</code>, and a different block if it's <code>False</code>. Only two possible outcomes.</li>
+    <li><strong>if-elif-else</strong>: checks multiple conditions in sequence, each with its own <code>elif</code>; Python runs the block for the <em>first</em> condition that evaluates to <code>True</code>, and falls back to <code>else</code> only if none of them match.</li>
+    <li><strong>Nesting</strong>: an <code>if</code>, <code>elif</code>, or <code>else</code> block can contain another complete <code>if-else</code> (or <code>if-elif-else</code>) block indented inside it.</li>
+    <li>Indentation controls which block a statement belongs to — Python uses indentation (not braces) to define nested scope.</li>
+    <li>Nesting allows <strong>conditional retries</strong> — e.g., if the password is wrong, ask the user to re-enter it, but only if the email was correct in the first place.</li>
+    <li>Combined with the <code>and</code> operator, conditions (nested or not) let you build increasingly specific checks (e.g., "email is correct <strong>and</strong> password is correct" vs. "email is correct <strong>but</strong> password is wrong").</li>
+  </ul>
+
+  <h2>Detailed Explanation</h2>
+
+  <h3>Version 1 — Simple if-else (single condition check)</h3>
+  <pre><code><span class="comment"># correct email- campusx@gmail.com
+# password - 1234</span>
+
+email = input("Apna email bata")
+password = input("Apna passowrd bhi bata")
+
+if email == "campusx@gmail.com" and password == "1234":
+    print("Welcome")
+else:
+    print("Incorrect credentials")</code></pre>
+
+  <p><strong>How it works:</strong></p>
+  <ul>
+    <li>Takes <code>email</code> and <code>password</code> as input from the user.</li>
+    <li>Uses the <code>and</code> operator so <strong>both</strong> conditions must be true to print <code>"Welcome"</code>.</li>
+    <li>If either the email or the password is wrong, it falls into the single <code>else</code> and prints <code>"Incorrect credentials"</code> — there's no way to tell the user <em>which</em> part was wrong.</li>
+  </ul>
+
+  <p><strong>Example run:</strong></p>
+  <pre><code><span class="out">Apna email bata: campusx@gmail.com
+Apna passowrd bhi bata: 1234
+Welcome</span></code></pre>
+
+  <div class="warn">⚠️ <strong>Limitation</strong>: This version can't distinguish between "wrong email" and "correct email but wrong password" — it treats both as the same generic failure. This motivates moving to nested if-else.</div>
+
+  <h3>Version 2 — If-Elif-Else with a Nested If-Else Inside It</h3>
+  <pre><code><span class="comment"># correct email- campusx@gmail.com
+# password - 1234</span>
+
+email = input("Apna email bata")
+password = input("Apna passowrd bhi bata")
+
+if email == "campusx@gmail.com" and password == "1234":
+    print("Welcome")
+elif email == "campusx@gmail.com" and password != "1234":
+    print("Password Incorrect")
+    password = input("Password fir se bol")
+    if password == "1234":
+        print("Finally correct")
+    else:
+        print("Still incorrect")
+else:
+    print("Incorrect credentials")</code></pre>
+
+  <p><strong>How it works — step by step:</strong></p>
+  <p>This version is an <strong>if-elif-else</strong> structure at the top level, with a small <strong>nested if-else</strong> tucked inside the <code>elif</code> branch.</p>
+  <ol>
+    <li><strong><code>if</code> (first condition)</strong>: email correct <strong>and</strong> password correct → <code>"Welcome"</code>.</li>
+    <li><strong><code>elif</code> (second condition)</strong>: email correct <strong>but</strong> password wrong → enters this branch.
+      <ul>
+        <li>Prints <code>"Password Incorrect"</code>.</li>
+        <li>Asks the user to re-enter the password with a second <code>input()</code>.</li>
+        <li><strong>Nested if-else</strong>: checks the <em>new</em> password.
+          <ul>
+            <li>If it now matches <code>"1234"</code> → <code>"Finally correct"</code>.</li>
+            <li>If it's still wrong → <code>"Still incorrect"</code>.</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><strong><code>else</code> (fallback)</strong>: if the email itself was wrong (regardless of password) → <code>"Incorrect credentials"</code>.</li>
+  </ol>
+
+  <p><strong>Important points:</strong></p>
+  <ul>
+    <li>The <strong>if-elif-else</strong> at the top handles three distinct outcomes for the <em>initial</em> attempt: fully correct, correct email/wrong password, or wrong email.</li>
+    <li>The <strong>nested if-else</strong> for the password retry is only reachable <strong>through</strong> the <code>elif</code> branch — i.e., only when the email was already correct. This is the core idea of nesting: an inner decision that only matters once an outer condition is met.</li>
+    <li>Giving the user a second chance to re-enter the password (rather than just failing immediately) is a simple example of improving user experience through nested logic.</li>
+    <li>The email check is done only once at the top; there's no retry logic for a wrong email in this version — it goes straight to <code>"Incorrect credentials"</code>.</li>
+  </ul>
+
+  <h3>Version 3 — Nested If-Else Wrapping an If-Elif-Else (multi-level nesting)</h3>
+  <p>A further extended version (seen in the full code) wraps the entire if-elif-else from Version 2 inside an <strong>outer if-else</strong> that first validates the email format:</p>
+  <pre><code><span class="comment"># correct email- campusx@gmail.com
+# password - 1234</span>
+
+email = input("Apna email bata")
+if '@' in email:
+    password = input("Apna passowrd bhi bata")
+
+    if email == "campusx@gmail.com" and password == "1234":
+        print("Welcome")
+    elif email == "campusx@gmail.com" and password != "1234":
+        print("Password Incorrect")
+        password = input("Password fir se bol")
+        if password == "1234":
+            print("Finally correct")
+        else:
+            print("Still incorrect")
+    else:
+        print("Incorrect credentials")
+else:
+    print("Email galat hai sahi likho")</code></pre>
+
+  <p><strong>How this differs from Version 2:</strong></p>
+  <ul>
+    <li>Adds an <strong>outer if-else validation layer</strong>: <code>if '@' in email:</code> checks whether the email even looks valid (contains <code>@</code>) <strong>before</strong> asking for a password at all.</li>
+    <li>The entire <strong>if-elif-else</strong> block from Version 2 (welcome / password incorrect+retry / incorrect credentials) is now <strong>nested inside</strong> this outer <code>if</code>, so it only runs when the email format passes.</li>
+    <li>If <code>'@'</code> is not in the email, the outer <code>else</code> triggers and it skips straight to <code>print("Email galat hai sahi likho")</code> (<em>"Email is wrong, type it correctly"</em>) — the password is never even asked for.</li>
+  </ul>
+  <p>This demonstrates <strong>three levels of nesting</strong> stacked together:</p>
+  <ul>
+    <li><strong>Level 1 (outer if-else)</strong>: is the email format valid?</li>
+    <li><strong>Level 2 (if-elif-else, nested inside Level 1)</strong>: is the email/password combo correct?</li>
+    <li><strong>Level 3 (nested if-else, inside Level 2's <code>elif</code>)</strong>: retry the password check.</li>
+  </ul>
+
+  <h2>Traced Example Runs</h2>
+  <table>
+    <tr><th>Email entered</th><th>Password entered</th><th>Output</th></tr>
+    <tr><td><code>campusx@gmail.com</code></td><td><code>1234</code></td><td><code>Welcome</code></td></tr>
+    <tr><td><code>campusx@gmail.com</code></td><td><code>12535</code> (then re-entered <code>1234</code>)</td><td><code>Password Incorrect</code> → <code>Finally correct</code></td></tr>
+    <tr><td><code>campusx@gmail.com</code></td><td><code>315236</code> (then re-entered <code>rjyyjr</code>)</td><td><code>Password Incorrect</code> → <code>Still incorrect</code></td></tr>
+  </table>
+
+  <div class="example">
+    <h4>Trace for the "Finally correct" example</h4>
+    <pre><code><span class="out">Apna email bata: campusx@gmail.com
+Apna passowrd bhi bata: 12535
+Password Incorrect
+Password fir se bol: 1234
+Finally correct</span></code></pre>
+    <p>Email matched → entered <code>elif</code> branch (password didn't match <code>1234</code> the first time). Prompted again, user typed <code>1234</code> correctly this time → nested <code>if</code> triggered → <code>"Finally correct"</code>.</p>
+  </div>
+
+  <div class="example">
+    <h4>Trace for the "Still incorrect" example</h4>
+    <pre><code><span class="out">Apna email bata: campusx@gmail.com
+Apna passowrd bhi bata: 315236
+Password Incorrect
+Password fir se bol: rjyyjr
+Still incorrect</span></code></pre>
+    <p>Same path, but the second password attempt was also wrong → nested <code>else</code> triggered → <code>"Still incorrect"</code>.</p>
+  </div>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li><strong>if-else</strong> = two-way decision: exactly one of two blocks runs.</li>
+      <li><strong>if-elif-else</strong> = multi-way decision: Python checks conditions top to bottom and runs the block for the <strong>first</strong> one that's <code>True</code>; <code>else</code> only runs if none matched.</li>
+      <li><strong>Nesting</strong> = placing a complete if-else (or if-elif-else) <strong>inside</strong> another one's block. The inner block only runs if the outer condition that contains it is satisfied.</li>
+      <li>Use <code>and</code> to combine multiple conditions in a single <code>if</code>/<code>elif</code> check (e.g., email <strong>and</strong> password both correct).</li>
+      <li>Nesting is useful for <strong>sequential/multi-step validation</strong> — e.g., check format first (if-else), then check correctness (if-elif-else), then allow a retry (nested if-else).</li>
+      <li>Be careful with <strong>indentation</strong> — it determines which block a line belongs to; misplaced indentation changes the logic entirely.</li>
+      <li>Adding retry logic (asking for input again inside a branch) is a simple, practical use of nesting to improve program flow instead of just failing outright.</li>
+      <li>The more you nest, the deeper the indentation — readability can suffer if nesting goes too deep.</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <ul>
+    <li><strong>if-else</strong>: one condition, two outcomes.</li>
+    <li><strong>if-elif-else</strong>: several conditions checked in order, first match wins.</li>
+    <li><strong>Nested if-else</strong>: an if-else placed inside another if-else's block, so the inner check only matters once the outer condition lets execution "fall into" it.</li>
+  </ul>
+  <p>In the login example, all three come together: the <strong>outer if-else</strong> validates the email format (<code>'@' in email</code>); <strong>nested inside it</strong>, an <strong>if-elif-else</strong> validates the email+password combination; and <strong>nested inside the <code>elif</code></strong> (correct email, wrong password), a <strong>third-level if-else</strong> gives the user a second chance to type the password correctly.</p>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>
