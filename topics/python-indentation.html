@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Indentation — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+    --err-bg:rgba(220,38,38,.06);
+    --err-border:rgba(220,38,38,.35);
+    --err-text:#b42318;
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+    --err-bg:rgba(248,113,113,.10);
+    --err-border:rgba(248,113,113,.35);
+    --err-text:#ff9a91;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+  h4{font-size:.95rem; color:var(--text); margin:18px 0 8px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+  pre.err code{color:var(--err-text);}
+  pre.err{border-color:var(--err-border); background:var(--err-bg);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  .example{
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    margin:16px 0;
+    background:var(--card);
+  }
+  .example h4{margin-top:0;}
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 2 · Python Basics</span>
+  </div>
+
+  <h1>Python Indentation</h1>
+  <p class="lede">No curly braces — Python uses whitespace to define blocks, and it's not optional. Here's how it works and the three ways it breaks.</p>
+
+  <h2>Overview</h2>
+  <p>In many programming languages (like C, Java, JavaScript), blocks of code are grouped using <strong>curly braces <code>{}</code></strong>. Python does <strong>not</strong> use curly braces — instead, it uses <strong>indentation (whitespace at the start of a line)</strong> to define which statements belong to which block (<code>if</code>, <code>else</code>, <code>for</code>, <code>while</code>, functions, etc.).</p>
+  <p>This means indentation in Python is not just a style choice — it is <strong>syntactically required</strong>. Getting it wrong causes an <code>IndentationError</code>.</p>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li>Python groups statements into blocks using <strong>consistent indentation</strong>, not braces.</li>
+    <li>Every statement inside the same block <strong>must have the exact same indentation level</strong>.</li>
+    <li>A new block (after a <code>:</code>) must be <strong>indented more</strong> than the line that introduced it.</li>
+    <li>Mixing indentation levels incorrectly leads to different types of <code>IndentationError</code>.</li>
+    <li>Indentation is normally done using <strong>4 spaces</strong> per level (a common Python convention).</li>
+  </ul>
+
+  <h2>Detailed Explanation</h2>
+
+  <h3>1. The Non-Python Style (For Comparison)</h3>
+  <p>Languages like C/Java use braces to mark blocks, so indentation there is just for readability, not required:</p>
+  <pre><code>if (name == "xyz") {
+    something;
+    something;
+} else {
+    something_else;
+    something_else;
+}</code></pre>
+  <p>Here, indentation doesn't matter to the compiler — only the <code>{ }</code> do.</p>
+
+  <h3>2. Python Style — Indentation Defines the Block</h3>
+  <pre><code>if name == "xyz":
+    line1
+    line2
+    line3
+else:
+    line1
+    line2
+    line3</code></pre>
+
+  <p><strong>How it works:</strong></p>
+  <ul>
+    <li>The <code>:</code> at the end of <code>if name == "xyz":</code> tells Python "a new block starts here."</li>
+    <li>All statements belonging to that <code>if</code> block (<code>line1</code>, <code>line2</code>, <code>line3</code>) must be indented <strong>by the same amount</strong>.</li>
+    <li>The <code>else:</code> must line up with the <code>if</code> (same indentation level as <code>if</code>), and its own block must again be indented consistently.</li>
+  </ul>
+  <blockquote><strong>Tip:</strong> Think of indentation as Python's replacement for <code>{ }</code>. Whatever is indented "under" a statement is considered part of that statement's block.</blockquote>
+
+  <h3>3. Common Indentation Errors (from examples)</h3>
+
+  <div class="example">
+    <h4>Error 1 — <code>IndentationError: expected an indented block</code></h4>
+    <pre><code>if name == "xyz":
+print('line 1')      <span class="comment"># ❌ not indented at all</span>
+    print('line2')
+else:
+    print('line3')</code></pre>
+    <p><strong>Why it fails:</strong> After a line ending in <code>:</code>, Python <em>expects</em> the next line to be indented (to start the block). Here <code>print('line 1')</code> has no indentation, so Python doesn't know it belongs to the <code>if</code>.</p>
+  </div>
+
+  <div class="example">
+    <h4>Error 2 — <code>IndentationError: unindent does not match any outer indentation level</code></h4>
+    <pre><code>name = "244"
+if name == "xyz":
+        print('line 1')   <span class="comment"># indented 8 spaces</span>
+    print('line2')        <span class="comment"># indented 4 spaces  ❌</span>
+else:
+    print('line3')</code></pre>
+    <p><strong>Why it fails:</strong> <code>print('line 1')</code> starts the block at an 8-space indent. The next line, <code>print('line2')</code>, tries to "unindent" to 4 spaces — but 4 spaces doesn't match <em>any</em> indentation level that Python has already established (it's neither the 8-space block level nor the 0-space outer level). Python gets confused about which block this line belongs to.</p>
+    <blockquote><strong>Key takeaway:</strong> Once you set an indentation level for a block, every line in that block must match it exactly. You can't randomly mix 4 spaces and 8 spaces within the same block.</blockquote>
+  </div>
+
+  <div class="example">
+    <h4>Error 3 — <code>IndentationError: unexpected indent</code></h4>
+    <pre><code>name = "244"
+if name == "xyz":
+    print('line 1')
+    print('line2')
+    if 5 == 5:
+        print('line 5')
+else:
+    print('line3')</code></pre>
+    <p><strong>General pattern to remember:</strong> This example also shows a <strong>nested <code>if</code></strong> — an <code>if</code> statement inside another <code>if</code> block:</p>
+    <pre><code>if name == "xyz":
+    print('line 1')
+    print('line2')
+    if 5 == 5:              <span class="comment"># nested if — one level deeper</span>
+        print('line 5')
+else:
+    print('line3')</code></pre>
+    <p>The nested <code>if 5 == 5:</code> block (<code>print('line 5')</code>) must be indented one level <strong>more</strong> than the outer <code>if</code> block's statements.</p>
+  </div>
+
+  <h2>Summary Table — Indentation Error Types</h2>
+  <table>
+    <tr><th>Error Message</th><th>Typical Cause</th></tr>
+    <tr><td><code>expected an indented block</code></td><td>A line ending in <code>:</code> is followed by a line with <strong>no/insufficient indentation</strong></td></tr>
+    <tr><td><code>unindent does not match any outer indentation level</code></td><td>A line's indentation drops to a level that <strong>doesn't match any previously opened block</strong></td></tr>
+    <tr><td><code>unexpected indent</code></td><td>A line is indented <strong>without a valid reason</strong> (no preceding <code>:</code> block opener at that level)</td></tr>
+  </table>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li>Python uses <strong>indentation instead of braces</strong> to define code blocks.</li>
+      <li>Every line in a block must have the <strong>same, consistent indentation</strong>.</li>
+      <li>A <code>:</code> at the end of a line (<code>if</code>, <code>else</code>, <code>for</code>, <code>while</code>, <code>def</code>, etc.) <strong>requires</strong> the next line to be indented.</li>
+      <li>Nested blocks (like an <code>if</code> inside an <code>if</code>) need <strong>one additional level of indentation</strong> compared to their parent block.</li>
+      <li>Mixing spaces inconsistently (e.g., 4 vs 8 spaces) within the same logical block causes errors.</li>
+      <li>Standard convention: use <strong>4 spaces</strong> per indentation level (avoid mixing tabs and spaces).</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <p>Python doesn't use <code>{ }</code> — it uses <strong>indentation</strong> to show what belongs inside an <code>if</code>, <code>else</code>, loop, etc. After any line ending in <code>:</code>, the next line <strong>must</strong> be indented more than it. All lines in the same block must share the <strong>exact same indentation</strong>. If indentation is missing → <code>expected an indented block</code>. If indentation drops to a level Python doesn't recognize → <code>unindent does not match any outer indentation level</code>. If a line is indented more than it should be without reason → <code>unexpected indent</code>. Nested blocks (if inside if) need progressively deeper indentation.</p>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>

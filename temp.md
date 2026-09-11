@@ -1,181 +1,118 @@
-# If-Else, If-Elif-Else, and Nested If-Else in Python
-
-*Source: 100 Days of Python Programming — Day 7 (CampusX)*
+# Python Indentation
 
 ## Overview
+In many programming languages (like C, Java, JavaScript), blocks of code are grouped using **curly braces `{}`**. Python does **not** use curly braces — instead, it uses **indentation (whitespace at the start of a line)** to define which statements belong to which block (`if`, `else`, `for`, `while`, functions, etc.).
 
-This topic covers three related conditional structures in Python, building up in complexity:
-
-1. **if-else** — a simple two-way decision (do this, or do that).
-2. **if-elif-else** — a multi-way decision with several distinct conditions checked in order.
-3. **Nested if-else** — placing an `if-else` (or `if-elif-else`) block *inside* another `if-else` block, so a second condition is only checked after a first condition has already been satisfied (or failed).
-
-All three are demonstrated together using a **login/authentication simulator** example, showing how the logic evolves from a basic check to a more capable, multi-step validation flow.
-
-The running example throughout is a **login/authentication simulator**:
-- Correct email: `campusx@gmail.com`
-- Correct password: `1234`
+This means indentation in Python is not just a style choice — it is **syntactically required**. Getting it wrong causes an `IndentationError`.
 
 ## Key Concepts
-
-- **if-else**: checks one condition; runs one block if it's `True`, and a different block if it's `False`. Only two possible outcomes.
-- **if-elif-else**: checks multiple conditions in sequence, each with its own `elif`; Python runs the block for the *first* condition that evaluates to `True`, and falls back to `else` only if none of them match.
-- **Nesting**: an `if`, `elif`, or `else` block can contain another complete `if-else` (or `if-elif-else`) block indented inside it.
-- Indentation controls which block a statement belongs to — Python uses indentation (not braces) to define nested scope.
-- Nesting allows **conditional retries** — e.g., if the password is wrong, ask the user to re-enter it, but only if the email was correct in the first place.
-- Combined with the `and` operator, conditions (nested or not) let you build increasingly specific checks (e.g., "email is correct **and** password is correct" vs. "email is correct **but** password is wrong").
+- Python groups statements into blocks using **consistent indentation**, not braces.
+- Every statement inside the same block **must have the exact same indentation level**.
+- A new block (after a `:`) must be **indented more** than the line that introduced it.
+- Mixing indentation levels incorrectly leads to different types of `IndentationError`.
+- Indentation is normally done using **4 spaces** per level (a common Python convention).
 
 ## Detailed Explanation
 
-### Version 1 — Simple if-else (single condition check)
+### 1. The Non-Python Style (For Comparison)
+Languages like C/Java use braces to mark blocks, so indentation there is just for readability, not required:
+
+```c
+if (name == "xyz") {
+    something;
+    something;
+} else {
+    something_else;
+    something_else;
+}
+```
+
+Here, indentation doesn't matter to the compiler — only the `{ }` do.
+
+### 2. Python Style — Indentation Defines the Block
 
 ```python
-# correct email- campusx@gmail.com
-# password - 1234
-
-email = input("Apna email bata")
-password = input("Apna passowrd bhi bata")
-
-if email == "campusx@gmail.com" and password == "1234":
-    print("Welcome")
+if name == "xyz":
+    line1
+    line2
+    line3
 else:
-    print("Incorrect credentials")
+    line1
+    line2
+    line3
 ```
 
 **How it works:**
-- Takes `email` and `password` as input from the user.
-- Uses the `and` operator so **both** conditions must be true to print `"Welcome"`.
-- If either the email or the password is wrong, it falls into the single `else` and prints `"Incorrect credentials"` — there's no way to tell the user *which* part was wrong.
+- The `:` at the end of `if name == "xyz":` tells Python "a new block starts here."
+- All statements belonging to that `if` block (`line1`, `line2`, `line3`) must be indented **by the same amount**.
+- The `else:` must line up with the `if` (same indentation level as `if`), and its own block must again be indented consistently.
 
-**Example run:**
-```
-Apna email bata: campusx@gmail.com
-Apna passowrd bhi bata: 1234
-Welcome
-```
+> **Tip:** Think of indentation as Python's replacement for `{ }`. Whatever is indented "under" a statement is considered part of that statement's block.
 
-> ⚠️ **Limitation**: This version can't distinguish between "wrong email" and "correct email but wrong password" — it treats both as the same generic failure. This motivates moving to nested if-else.
+### 3. Common Indentation Errors (from examples)
 
-### Version 2 — If-Elif-Else with a Nested If-Else Inside It
-
+#### Error 1 — `IndentationError: expected an indented block`
 ```python
-# correct email- campusx@gmail.com
-# password - 1234
-
-email = input("Apna email bata")
-password = input("Apna passowrd bhi bata")
-
-if email == "campusx@gmail.com" and password == "1234":
-    print("Welcome")
-elif email == "campusx@gmail.com" and password != "1234":
-    print("Password Incorrect")
-    password = input("Password fir se bol")
-    if password == "1234":
-        print("Finally correct")
-    else:
-        print("Still incorrect")
+if name == "xyz":
+print('line 1')      # ❌ not indented at all
+    print('line2')
 else:
-    print("Incorrect credentials")
+    print('line3')
 ```
+**Why it fails:** After a line ending in `:`, Python *expects* the next line to be indented (to start the block). Here `print('line 1')` has no indentation, so Python doesn't know it belongs to the `if`.
 
-**How it works — step by step:**
-This version is an **if-elif-else** structure at the top level, with a small **nested if-else** tucked inside the `elif` branch.
-
-1. **`if` (first condition)**: email correct **and** password correct → `"Welcome"`.
-2. **`elif` (second condition)**: email correct **but** password wrong → enters this branch.
-   - Prints `"Password Incorrect"`.
-   - Asks the user to re-enter the password with a second `input()`.
-   - **Nested if-else**: checks the *new* password.
-     - If it now matches `"1234"` → `"Finally correct"`.
-     - If it's still wrong → `"Still incorrect"`.
-3. **`else` (fallback)**: if the email itself was wrong (regardless of password) → `"Incorrect credentials"`.
-
-**Important points:**
-- The **if-elif-else** at the top handles three distinct outcomes for the *initial* attempt: fully correct, correct email/wrong password, or wrong email.
-- The **nested if-else** for the password retry is only reachable **through** the `elif` branch — i.e., only when the email was already correct. This is the core idea of nesting: an inner decision that only matters once an outer condition is met.
-- Giving the user a second chance to re-enter the password (rather than just failing immediately) is a simple example of improving user experience through nested logic.
-- The email check is done only once at the top; there's no retry logic for a wrong email in this version — it goes straight to `"Incorrect credentials"`.
-
-### Version 3 — Nested If-Else Wrapping an If-Elif-Else (multi-level nesting)
-
-A further extended version (seen in the full code) wraps the entire if-elif-else from Version 2 inside an **outer if-else** that first validates the email format:
-
+#### Error 2 — `IndentationError: unindent does not match any outer indentation level`
 ```python
-# correct email- campusx@gmail.com
-# password - 1234
-
-email = input("Apna email bata")
-if '@' in email:
-    password = input("Apna passowrd bhi bata")
-
-    if email == "campusx@gmail.com" and password == "1234":
-        print("Welcome")
-    elif email == "campusx@gmail.com" and password != "1234":
-        print("Password Incorrect")
-        password = input("Password fir se bol")
-        if password == "1234":
-            print("Finally correct")
-        else:
-            print("Still incorrect")
-    else:
-        print("Incorrect credentials")
+name = "244"
+if name == "xyz":
+        print('line 1')   # indented 8 spaces
+    print('line2')        # indented 4 spaces  ❌
 else:
-    print("Email galat hai sahi likho")
+    print('line3')
+```
+**Why it fails:** `print('line 1')` starts the block at an 8-space indent. The next line, `print('line2')`, tries to "unindent" to 4 spaces — but 4 spaces doesn't match *any* indentation level that Python has already established (it's neither the 8-space block level nor the 0-space outer level). Python gets confused about which block this line belongs to.
+
+> **Key takeaway:** Once you set an indentation level for a block, every line in that block must match it exactly. You can't randomly mix 4 spaces and 8 spaces within the same block.
+
+#### Error 3 — `IndentationError: unexpected indent`
+```python
+name = "244"
+if name == "xyz":
+    print('line 1')
+    print('line2')
+    if 5 == 5:
+        print('line 5')
+else:
+    print('line3')
 ```
 
-**How this differs from Version 2:**
-- Adds an **outer if-else validation layer**: `if '@' in email:` checks whether the email even looks valid (contains `@`) **before** asking for a password at all.
-- The entire **if-elif-else** block from Version 2 (welcome / password incorrect+retry / incorrect credentials) is now **nested inside** this outer `if`, so it only runs when the email format passes.
-- If `'@'` is not in the email, the outer `else` triggers and it skips straight to `print("Email galat hai sahi likho")` (*"Email is wrong, type it correctly"*) — the password is never even asked for.
-- This demonstrates **three levels of nesting** stacked together:
-  - **Level 1 (outer if-else)**: is the email format valid?
-  - **Level 2 (if-elif-else, nested inside Level 1)**: is the email/password combo correct?
-  - **Level 3 (nested if-else, inside Level 2's `elif`)**: retry the password check.
-
-## Traced Example Runs (from screenshots)
-
-| Email entered | Password entered | Output |
-|---|---|---|
-| `campusx@gmail.com` | `1234` | `Welcome` |
-| `campusx@gmail.com` | `12535` (then re-entered `1234`) | `Password Incorrect` → `Finally correct` |
-| `campusx@gmail.com` | `315236` (then re-entered `rjyyjr`) | `Password Incorrect` → `Still incorrect` |
-
-**Trace for the "Finally correct" example:**
+**General pattern to remember:** This example also shows a **nested `if`** — an `if` statement inside another `if` block:
+```python
+if name == "xyz":
+    print('line 1')
+    print('line2')
+    if 5 == 5:              # nested if — one level deeper
+        print('line 5')
+else:
+    print('line3')
 ```
-Apna email bata: campusx@gmail.com
-Apna passowrd bhi bata: 12535
-Password Incorrect
-Password fir se bol: 1234
-Finally correct
-```
-- Email matched → entered `elif` branch (password didn't match `1234` the first time).
-- Prompted again, user typed `1234` correctly this time → nested `if` triggered → `"Finally correct"`.
+The nested `if 5 == 5:` block (`print('line 5')`) must be indented one level **more** than the outer `if` block's statements.
 
-**Trace for the "Still incorrect" example:**
-```
-Apna email bata: campusx@gmail.com
-Apna passowrd bhi bata: 315236
-Password Incorrect
-Password fir se bol: rjyyjr
-Still incorrect
-```
-- Same path, but the second password attempt was also wrong → nested `else` triggered → `"Still incorrect"`.
+## Summary Table — Indentation Error Types
+
+| Error Message | Typical Cause |
+|---|---|
+| `expected an indented block` | A line ending in `:` is followed by a line with **no/insufficient indentation** |
+| `unindent does not match any outer indentation level` | A line's indentation drops to a level that **doesn't match any previously opened block** |
+| `unexpected indent` | A line is indented **without a valid reason** (no preceding `:` block opener at that level) |
 
 ## Things to Remember
-
-- **if-else** = two-way decision: exactly one of two blocks runs.
-- **if-elif-else** = multi-way decision: Python checks conditions top to bottom and runs the block for the **first** one that's `True`; `else` only runs if none matched.
-- **Nesting** = placing a complete if-else (or if-elif-else) **inside** another one's block. The inner block only runs if the outer condition that contains it is satisfied.
-- Use `and` to combine multiple conditions in a single `if`/`elif` check (e.g., email **and** password both correct).
-- Nesting is useful for **sequential/multi-step validation** — e.g., check format first (if-else), then check correctness (if-elif-else), then allow a retry (nested if-else).
-- Be careful with **indentation** — it determines which block a line belongs to; misplaced indentation changes the logic entirely.
-- Adding retry logic (asking for input again inside a branch) is a simple, practical use of nesting to improve program flow instead of just failing outright.
-- The more you nest, the deeper the indentation — readability can suffer if nesting goes too deep (not explicitly stated in the screenshots, but implied by the structure shown).
+- Python uses **indentation instead of braces** to define code blocks.
+- Every line in a block must have the **same, consistent indentation**.
+- A `:` at the end of a line (`if`, `else`, `for`, `while`, `def`, etc.) **requires** the next line to be indented.
+- Nested blocks (like an `if` inside an `if`) need **one additional level of indentation** compared to their parent block.
+- Mixing spaces inconsistently (e.g., 4 vs 8 spaces) within the same logical block causes errors.
+- Standard convention: use **4 spaces** per indentation level (avoid mixing tabs and spaces).
 
 ## Quick Revision
-
-- **if-else**: one condition, two outcomes.
-- **if-elif-else**: several conditions checked in order, first match wins.
-- **Nested if-else**: an if-else placed inside another if-else's block, so the inner check only matters once the outer condition lets execution "fall into" it.
-
-In the login example, all three come together: the **outer if-else** validates the email format (`'@' in email`); **nested inside it**, an **if-elif-else** validates the email+password combination; and **nested inside the `elif`** (correct email, wrong password), a **third-level if-else** gives the user a second chance to type the password correctly.
+Python doesn't use `{ }` — it uses **indentation** to show what belongs inside an `if`, `else`, loop, etc. After any line ending in `:`, the next line **must** be indented more than it. All lines in the same block must share the **exact same indentation**. If indentation is missing → `expected an indented block`. If indentation drops to a level Python doesn't recognize → `unindent does not match any outer indentation level`. If a line is indented more than it should be without reason → `unexpected indent`. Nested blocks (if inside if) need progressively deeper indentation.

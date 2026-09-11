@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The while Loop — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 3 · Control Flow</span>
+  </div>
+
+  <h1>The while Loop</h1>
+  <p class="lede">Repeat a block for as long as a condition holds — colon and indentation instead of braces, and the multiplication table exercise that ties it together.</p>
+
+  <h2>Overview</h2>
+  <p>This topic covers the <strong><code>while</code> loop</strong> in Python — one of Python's two main looping constructs (the other being <code>for</code>). The <code>while</code> loop repeats a block of code <strong>as long as a given condition remains <code>True</code></strong>. The notes also touch on how <code>while</code> looks in C-style languages vs. Python, and briefly mention <code>do-while</code> (which Python does not have natively).</p>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li>A <code>while</code> loop keeps executing its body <strong>while the condition evaluates to <code>True</code></strong>.</li>
+    <li>Python does <strong>not</strong> use curly braces <code>{}</code> for blocks — it uses a colon <code>:</code> and <strong>indentation</strong> instead.</li>
+    <li>Loop variables must be <strong>initialized before</strong> the loop and <strong>updated inside</strong> the loop, otherwise you get an infinite loop.</li>
+    <li>The classic use-case shown: <strong>multiplication table generator</strong>.</li>
+  </ul>
+
+  <h2>Detailed Explanation</h2>
+
+  <h3>1. while Syntax — C-style vs Python</h3>
+  <p>The instructor compares the general/C-style <code>while</code> syntax with Python's syntax to highlight the difference:</p>
+
+  <p><strong>C-style (curly braces):</strong></p>
+  <pre><code>while(condition){
+    code
+}</code></pre>
+
+  <p><strong>Python-style (colon + indentation):</strong></p>
+  <pre><code>while condition:
+    code</code></pre>
+
+  <blockquote>💡 <strong>Tip:</strong> In Python, indentation is not just for readability — it <strong>defines the block of code</strong> that belongs to the loop. Incorrect indentation will cause errors or unexpected behavior.</blockquote>
+
+  <p>A related comment block also lists <code># while</code>, <code># do while</code>, and <code># for</code> — indicating these are the loop types being discussed/compared in the video.</p>
+
+  <div class="warn">⚠️ <strong>Note:</strong> Python does <strong>not</strong> have a built-in <code>do-while</code> loop (unlike C/C++/Java). This was likely mentioned only as a comparison point, not something implemented in Python. ⚠️ Screenshot text unclear — the video doesn't show a Python <code>do-while</code> example, only the label in a comment.</div>
+
+  <h3>2. Basic Loop Structure (Anatomy)</h3>
+  <p>A <code>while</code> loop generally needs 3 parts:</p>
+  <ol>
+    <li><strong>Initialization</strong> – set up a counter/loop variable before the loop starts (e.g., <code>i = 1</code>)</li>
+    <li><strong>Condition</strong> – checked before every iteration (e.g., <code>i &lt; 11</code>)</li>
+    <li><strong>Update/Increment</strong> – changes the loop variable inside the loop body so the condition eventually becomes <code>False</code> (e.g., <code>i += 1</code>)</li>
+  </ol>
+  <p>If you forget the update step, the condition never becomes <code>False</code> → <strong>infinite loop</strong>.</p>
+
+  <h2>Example 1 — Simple Multiplication Table</h2>
+  <pre><code>number = int(input("Enter the number"))
+
+i = 1
+
+while i < 11:
+    print(number * i)
+    i += 1</code></pre>
+
+  <p><strong>Explanation of the code:</strong></p>
+  <ul>
+    <li><code>int(input("Enter the number"))</code> — takes user input (as a string) and converts it to an integer, storing it in <code>number</code>.</li>
+    <li><code>i = 1</code> — initializes the counter used to track which multiple we're on.</li>
+    <li><code>while i &lt; 11:</code> — loop runs <strong>10 times</strong> (while <code>i</code> is 1 through 10).</li>
+    <li><code>print(number * i)</code> — prints the product of <code>number</code> and the current counter <code>i</code>.</li>
+    <li><code>i += 1</code> — increments <code>i</code> by 1 each iteration so the loop eventually stops.</li>
+  </ul>
+
+  <p><strong>Example run (input = 11):</strong></p>
+  <pre><code><span class="out">Enter the number11
+11
+22
+33
+44
+55
+66
+77
+88
+99
+110</span></code></pre>
+
+  <p><strong>Important Points:</strong></p>
+  <ul>
+    <li>The loop prints only the <strong>result</strong> of the multiplication (not the full equation).</li>
+    <li>The condition <code>i &lt; 11</code> combined with starting <code>i</code> at <code>1</code> gives exactly <strong>10 iterations</strong> (1 through 10).</li>
+  </ul>
+
+  <h2>Example 2 — Multiplication Table with Full Equation Format</h2>
+  <pre><code>number = int(input("Enter the number"))
+
+i = 1
+
+while i < 11:
+    print(number, "*", i, "=", number * i)
+    i += 1</code></pre>
+
+  <p><strong>Explanation of the code:</strong></p>
+  <ul>
+    <li>Same loop structure as Example 1, but instead of printing just the answer, it prints the <strong>full equation</strong> using multiple comma-separated arguments to <code>print()</code>.</li>
+    <li><code>print(number, "*", i, "=", number * i)</code> — Python's <code>print()</code> function automatically adds spaces between comma-separated arguments, which is why the output looks like a clean equation.</li>
+  </ul>
+
+  <p><strong>Example run (input = 24):</strong></p>
+  <pre><code><span class="out">Enter the number24
+24 * 1 = 24
+24 * 2 = 48
+24 * 3 = 72
+24 * 4 = 96
+24 * 5 = 120
+24 * 6 = 144
+24 * 7 = 168
+24 * 8 = 192
+24 * 9 = 216
+24 * 10 = 240</span></code></pre>
+
+  <p><strong>Important Points:</strong></p>
+  <ul>
+    <li>Using multiple comma-separated values inside <code>print()</code> is a simple way to format readable output without needing f-strings or <code>.format()</code>.</li>
+    <li>This is a very common <strong>beginner pattern</strong> for generating multiplication tables — good to remember as a template for similar looping problems.</li>
+  </ul>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li>✅ Python <code>while</code> loop syntax: <code>while condition:</code> followed by an <strong>indented block</strong> (no parentheses or braces required, though parentheses around the condition are optional/allowed).</li>
+      <li>✅ Always initialize the loop variable <strong>before</strong> the loop and update it <strong>inside</strong> the loop.</li>
+      <li>✅ <code>while i &lt; 11</code> with <code>i</code> starting at <code>1</code> → loop runs for <code>i = 1</code> to <code>i = 10</code> (10 times total).</li>
+      <li>✅ <code>print()</code> with comma-separated arguments auto-inserts spaces — handy for quick formatted output.</li>
+      <li>✅ Python has no native <code>do-while</code> loop (this only appeared as a labeled comparison point, not an actual implementation).</li>
+      <li>✅ <code>int(input(...))</code> is the standard pattern to read a number from the user in Python.</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <p>A <code>while</code> loop in Python repeats a block <strong>while a condition is <code>True</code></strong>, using a colon and indentation instead of curly braces (unlike C-style languages). Every <code>while</code> loop needs an <strong>initialized variable</strong>, a <strong>condition</strong>, and an <strong>update step</strong> inside the loop — skip the update and you get an infinite loop. The example used throughout is a <strong>multiplication table generator</strong>: take a number as input, loop <code>i</code> from 1 to 10, and print either <code>number * i</code> or the full equation <code>number * i = result</code>. This is a classic beginner exercise for practicing loop initialization, condition-checking, and incrementing.</p>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>
