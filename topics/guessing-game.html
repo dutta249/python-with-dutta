@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guessing Game (Jackpot) — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 3 · Control Flow</span>
+  </div>
+
+  <h1>Guessing Game (Jackpot) — while Loops</h1>
+  <p class="lede">A random number, a while loop, and a counter — plus a manual binary-search strategy that turns brute-force guessing into a fast, deliberate hunt.</p>
+
+  <h2>Overview</h2>
+  <p>This is a <strong>Loops</strong> exercise. The program picks a random "jackpot" number, and the user keeps guessing until they get it right. It's a practical demonstration of:</p>
+  <ul>
+    <li>The <code>while</code> loop (loop that runs until a condition becomes false)</li>
+    <li><code>if / else</code> branching inside a loop</li>
+    <li>Using a <strong>counter variable</strong> to track how many attempts were made</li>
+    <li>A simple manual <strong>binary search strategy</strong> for guessing efficiently</li>
+  </ul>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li><strong><code>random.randint(a, b)</code></strong> — generates a random integer between <code>a</code> and <code>b</code> (inclusive).</li>
+    <li><strong><code>while &lt;condition&gt;:</code></strong> — repeats the block as long as the condition is <code>True</code>. Here it keeps running as long as <code>guess != jackpot</code>.</li>
+    <li><strong><code>int(input(...))</code></strong> — takes user input (which is always a string) and converts it to an integer so it can be compared numerically.</li>
+    <li><strong>Counter pattern</strong> — a variable (<code>counter</code>) initialized before the loop and incremented (<code>counter += 1</code>) on every iteration, used to count how many times something happened.</li>
+    <li><strong>Binary search (manual)</strong> — instead of guessing randomly, the player narrows the range by roughly halving it each time based on "higher"/"lower" feedback — the same logic behind efficient search algorithms.</li>
+  </ul>
+
+  <h2>Detailed Explanation</h2>
+  <h3>How the program works (step-by-step)</h3>
+  <ol>
+    <li>Generate a random number between 1 and 100 and store it in <code>jackpot</code>.</li>
+    <li>Ask the user for a first guess and store it as an integer in <code>guess</code>.</li>
+    <li>Initialize <code>counter = 1</code> (this guess already counts as attempt #1).</li>
+    <li>Enter a <code>while</code> loop that continues <strong>as long as the guess is wrong</strong> (<code>guess != jackpot</code>):
+      <ul>
+        <li>If <code>guess &lt; jackpot</code> → print <code>"Guess higher"</code>.</li>
+        <li>Else (meaning <code>guess &gt; jackpot</code>, since equality would've exited the loop) → print <code>"Guess lower"</code>.</li>
+        <li>Ask for a new guess and increment the counter.</li>
+      </ul>
+    </li>
+    <li>Once <code>guess == jackpot</code>, the <code>while</code> condition becomes <code>False</code>, so the loop stops.</li>
+    <li>Print <code>"Sahi Jawab"</code> (Hindi for "Correct Answer") and show the total number of attempts taken.</li>
+  </ol>
+
+  <h3>Why else alone works (without a second elif guess &gt; jackpot)</h3>
+  <p>Since the <code>while</code> loop only continues when <code>guess != jackpot</code>, inside the loop the guess can <strong>never</strong> be equal to the jackpot. So there are only two real possibilities left: <code>guess &lt; jackpot</code> or <code>guess &gt; jackpot</code>. That's why a plain <code>else</code> safely covers the "guess is too high" case without needing an explicit comparison.</p>
+
+  <h2>Commands / Syntax</h2>
+  <pre><code>import random
+
+jackpot = random.randint(1, 100)
+
+guess = int(input("Chal guess kar"))
+counter = 1
+
+while guess != jackpot:
+    if guess < jackpot:
+        print("Guess higher")
+    else:
+        print("Guess lower")
+
+    guess = int(input("Chal guess kar"))
+    counter += 1
+
+print("Sahi Jawab")
+print("You took", counter, "attempts")</code></pre>
+
+  <h3>Line-by-line notes</h3>
+  <table>
+    <tr><th>Line</th><th>Purpose</th></tr>
+    <tr><td><code>random.randint(1, 100)</code></td><td>Picks the secret number the player must guess</td></tr>
+    <tr><td><code>int(input("Chal guess kar"))</code></td><td>Reads guess from user; <code>int()</code> is required because <code>input()</code> always returns a string</td></tr>
+    <tr><td><code>counter = 1</code></td><td>Starts counting from the very first guess</td></tr>
+    <tr><td><code>while guess != jackpot:</code></td><td>Loop keeps running until the guess matches</td></tr>
+    <tr><td><code>if guess &lt; jackpot / else</code></td><td>Gives the player a hint to go higher or lower</td></tr>
+    <tr><td><code>counter += 1</code></td><td>Increments attempt count on every loop pass</td></tr>
+    <tr><td><code>print("You took", counter, "attempts")</code></td><td>Final summary after the loop ends</td></tr>
+  </table>
+
+  <blockquote><strong>Note:</strong> <code>print()</code> with comma-separated arguments (e.g. <code>print("You took", counter, "attempts")</code>) automatically inserts spaces between the values — no need to manually convert <code>counter</code> to a string or use string concatenation.</blockquote>
+
+  <h2>Example Run </h2>
+  <p>Using a <strong>binary search strategy</strong> (start at the midpoint of the range, then keep halving), the game was solved in this sequence — the actual jackpot turned out to be <strong>58</strong>:</p>
+  <table>
+    <tr><th>Attempt</th><th>Guess</th><th>Feedback</th></tr>
+    <tr><td>1</td><td>30</td><td>Guess higher</td></tr>
+    <tr><td>2</td><td>50</td><td>Guess higher</td></tr>
+    <tr><td>3</td><td>70</td><td>Guess lower</td></tr>
+    <tr><td>4</td><td>60</td><td>Guess lower</td></tr>
+    <tr><td>5</td><td>55</td><td>Guess higher</td></tr>
+    <tr><td>6</td><td>57</td><td>Guess higher</td></tr>
+    <tr><td>7</td><td>59</td><td>Guess lower</td></tr>
+    <tr><td>8</td><td>58</td><td>✅ Sahi Jawab</td></tr>
+  </table>
+
+  <p><strong>Final output:</strong></p>
+  <pre><code><span class="out">Sahi Jawab
+You took 8 attempts</span></code></pre>
+
+  <blockquote>💡 <strong>Tip:</strong> Guessing the midpoint of the current possible range each time (like 1–100 → 50 → 75 or 25, etc.) is far more efficient than guessing randomly — this is exactly the idea behind the <strong>binary search</strong> algorithm, which finds a value in a sorted range in roughly <code>log₂(n)</code> steps.</blockquote>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li>Always wrap <code>input()</code> in <code>int()</code> (or <code>float()</code>) when you need to do numeric comparisons — raw <code>input()</code> output is a string.</li>
+      <li>Initialize your counter <strong>before</strong> the loop starts, and increment it <strong>inside</strong> the loop body.</li>
+      <li>A <code>while</code> loop needs some line inside it that eventually makes the condition <code>False</code> (here, getting new input) — otherwise it becomes an <strong>infinite loop</strong>.</li>
+      <li>When only two outcomes remain possible after a loop condition, a simple <code>if / else</code> is enough — you don't always need <code>elif</code>.</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <p>A <code>while</code> loop repeats until <code>guess != jackpot</code> becomes <code>False</code>. Each pass: compare the guess to the jackpot, print a hint ("Guess higher"/"Guess lower"), take a new guess, and bump a <code>counter</code>. Once correct, the loop exits and prints how many attempts (<code>counter</code>) it took. Guessing via <strong>binary search</strong> (halving the range each time) solves it in very few tries — in the traced example, 8 attempts to find jackpot = 58.</p>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>
