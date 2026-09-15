@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>break, continue &amp; pass — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 3 · Control Flow</span>
+  </div>
+
+  <h1>Loop Control Statements: break, continue &amp; pass</h1>
+  <p class="lede">Three statements for steering a loop mid-flight — stop it entirely, skip one round, or do nothing at all.</p>
+
+  <h2>Overview</h2>
+  <p>Python provides three special statements to control the flow of loops (<code>for</code> and <code>while</code>):</p>
+  <ul>
+    <li><strong><code>break</code></strong> — exits the loop entirely, skipping any remaining iterations.</li>
+    <li><strong><code>continue</code></strong> — skips the rest of the current iteration and moves to the next one.</li>
+    <li><strong><code>pass</code></strong> — does nothing; it's a placeholder that lets you write a syntactically valid empty block.</li>
+  </ul>
+  <p>All three examples in this note use the same base loop: <code>for i in range(1, 11):</code>, which iterates <code>i</code> from 1 to 10.</p>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li><code>break</code> <strong>terminates the entire loop</strong> as soon as the condition is met — no further iterations run, even if there were more values left.</li>
+    <li><code>continue</code> <strong>skips only the current iteration</strong> — the loop keeps running for the remaining values.</li>
+    <li><code>pass</code> is a <strong>no-op statement</strong> — used when Python syntax requires a statement (e.g., inside an <code>if</code>, loop, or function body) but you don't want any code to run there yet.</li>
+    <li>When <code>continue</code> is triggered, <strong>every statement after it in that loop iteration is skipped</strong>, not just the next line — execution jumps straight back to the top of the loop.</li>
+  </ul>
+
+  <h2>Detailed Explanation</h2>
+
+  <h3>break</h3>
+  <pre><code>for i in range(1, 11):
+    if i == 5:
+        break
+    print(i)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">1
+2
+3
+4</span></code></pre>
+  <p><strong>What happens:</strong> The loop prints <code>i</code> normally for 1, 2, 3, 4. When <code>i</code> becomes 5, the <code>if</code> condition is <code>True</code>, so <code>break</code> runs and the loop <strong>stops immediately</strong> — it never reaches 6, 7, 8... even though <code>range(1, 11)</code> technically goes up to 10.</p>
+  <blockquote><strong>Note:</strong> <code>break</code> only exits the innermost loop it's placed in.</blockquote>
+
+  <h3>continue</h3>
+  <pre><code>for i in range(1, 11):
+    if i == 5:
+        continue
+    print(i)</code></pre>
+  <p><strong>Output:</strong></p>
+  <pre><code><span class="out">1
+2
+3
+4
+6
+7
+8
+9
+10</span></code></pre>
+  <p><strong>What happens:</strong> When <code>i == 5</code>, <code>continue</code> is triggered, so <code>print(i)</code> is <strong>skipped only for that one iteration</strong> (5 is never printed). The loop then moves on and continues normally for 6 through 10.</p>
+
+  <h3>continue skips <em>all</em> remaining statements in that iteration</h3>
+  <pre><code>for i in range(1, 11):
+    if i == 5:
+        continue
+    print(i)
+    print("Hello")</code></pre>
+  <p><strong>Output (pattern):</strong></p>
+  <pre><code><span class="out">1
+Hello
+2
+Hello
+3
+Hello
+4
+Hello
+6
+Hello
+7
+Hello
+8
+Hello
+...</span></code></pre>
+  <p><strong>What happens:</strong> For every value of <code>i</code> except 5, both <code>print(i)</code> and <code>print("Hello")</code> run. But when <code>i == 5</code>, <code>continue</code> skips <strong>both</strong> remaining print statements for that iteration — not just the next line — and jumps straight to <code>i = 6</code>. This demonstrates that <code>continue</code> skips everything below it in the loop body for the current pass, not just the immediately following statement.</p>
+
+  <h3>pass</h3>
+  <pre><code>for i in range(1, 11):
+    pass</code></pre>
+  <p><strong>What happens:</strong> This loop runs 10 times but does <strong>nothing</strong> on each iteration — <code>pass</code> is just a placeholder. There is no output. It's typically used as a temporary stand-in while writing code, e.g., when you've defined a loop or function structure but haven't decided what should go inside yet.</p>
+
+  <h2>Commands / Syntax Summary</h2>
+  <table>
+    <tr><th>Statement</th><th>Effect</th><th>Scope of effect</th></tr>
+    <tr><td><code>break</code></td><td>Exits the loop completely</td><td>Entire loop (remaining iterations don't run)</td></tr>
+    <tr><td><code>continue</code></td><td>Skips to the next iteration</td><td>Only the current iteration</td></tr>
+    <tr><td><code>pass</code></td><td>Does nothing (placeholder)</td><td>No effect on control flow</td></tr>
+  </table>
+
+  <h2>Important Points</h2>
+  <ul>
+    <li><code>break</code> and <code>continue</code> are typically used inside an <code>if</code> condition within a loop.</li>
+    <li><code>break</code> stops the loop <strong>immediately</strong>, even mid-iteration.</li>
+    <li><code>continue</code> does <strong>not</strong> stop the loop — it only skips the remainder of the current cycle.</li>
+    <li><code>pass</code> is purely syntactic — it never affects output or control flow, it just satisfies Python's requirement that a block can't be empty.</li>
+    <li>Running an incomplete code cell (e.g., mid-typing) can cause a misleading <code>SyntaxError: unexpected EOF while parsing</code> — this is an editing artifact, not a language issue with <code>pass</code>.</li>
+  </ul>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li><strong><code>break</code></strong> = stop the whole loop right now.</li>
+      <li><strong><code>continue</code></strong> = skip the rest of <em>this</em> round, keep looping.</li>
+      <li><strong><code>pass</code></strong> = do nothing, just a placeholder to keep the syntax valid.</li>
+      <li>With <code>range(1, 11)</code> and <code>if i == 5</code>: <code>break</code> → stops after printing 1-4; <code>continue</code> → prints 1-4, skips 5, then prints 6-10.</li>
+      <li><code>continue</code> skips <strong>all</strong> code below it in that loop cycle, not just one line.</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <p><code>break</code> stops the whole loop right now. <code>continue</code> skips the rest of this round and keeps looping. <code>pass</code> does nothing — it's just a placeholder to keep the syntax valid. With <code>range(1, 11)</code> and <code>if i == 5</code>: <code>break</code> stops after printing 1-4, while <code>continue</code> prints 1-4, skips 5, then prints 6-10. Remember that <code>continue</code> skips <strong>all</strong> code below it in that loop cycle, not just the next line.</p>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>

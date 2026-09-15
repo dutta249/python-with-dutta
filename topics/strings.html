@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Strings — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+    --err-bg:rgba(220,38,38,.06);
+    --err-border:rgba(220,38,38,.35);
+    --err-text:#b42318;
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+    --err-bg:rgba(248,113,113,.10);
+    --err-border:rgba(248,113,113,.35);
+    --err-text:#ff9a91;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:28px;}
+
+  .toc{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 22px;
+    margin-bottom:36px;
+  }
+  .toc p{margin:0 0 8px; font-weight:600; color:var(--text); font-size:.85rem; text-transform:uppercase; letter-spacing:.04em;}
+  .toc ol{margin:0; padding-left:20px;}
+  .toc a{color:var(--accent2); text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  h2{
+    font-size:1.5rem;
+    margin:52px 0 6px;
+    color:var(--text);
+    scroll-margin-top:76px;
+  }
+  .part-eyebrow{
+    display:block;
+    font-size:.75rem;
+    color:var(--accent2);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  h2.first{margin-top:0;}
+  .section-divider{border:none; border-top:1px solid var(--border); margin:40px 0;}
+
+  h3{
+    font-size:1.2rem;
+    margin:32px 0 12px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h4{font-size:1rem; color:var(--accent3); margin:22px 0 8px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+  pre.err code{color:var(--err-text);}
+  pre.err{border-color:var(--err-border); background:var(--err-bg);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  /* Group a code cell with the output pre(s) that immediately follow it
+     into one visual block, like a notebook cell + its result. */
+  pre + pre{
+    margin-top:0;
+    border-top:1px dashed var(--border);
+    border-top-left-radius:0;
+    border-top-right-radius:0;
+    background:var(--bg-soft);
+  }
+  pre:has(+ pre){
+    margin-bottom:0;
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+  }
+
+  .table-wrap{
+    overflow-x:auto;
+    margin:16px 0;
+    border-radius:var(--radius);
+  }
+  .table-wrap table{margin:0;}
+
+  /* Sticky in-page part navigation */
+  .part-nav{
+    position:sticky;
+    top:0;
+    z-index:5;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:10px 4px;
+    margin:0 -4px 32px;
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+    scrollbar-width:none;
+  }
+  .part-nav::-webkit-scrollbar{display:none;}
+  .part-nav a{
+    flex-shrink:0;
+    display:inline-flex;
+    align-items:center;
+    padding:6px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text-dim);
+    text-decoration:none;
+    font-size:.82rem;
+    font-weight:600;
+    white-space:nowrap;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .part-nav a:hover{color:var(--text); border-color:var(--accent2);}
+  .part-nav a.active{
+    color:#fff;
+    border-color:transparent;
+    background:linear-gradient(135deg, var(--accent2), var(--accent3));
+  }
+
+  .to-top{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:10;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:1.1rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 4px 16px rgba(0,0,0,.12);
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(8px);
+    transition:opacity .2s, transform .2s, border-color .2s;
+  }
+  .to-top.show{opacity:1; pointer-events:auto; transform:translateY(0);}
+  .to-top:hover{border-color:var(--accent2);}
+
+  @media (max-width:480px){
+    .part-nav{margin-bottom:24px;}
+  }
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 4 · Data Structures</span>
+  </div>
+
+  <h1>Python Strings</h1>
+  <p class="lede">Everything about strings in one place — creation, indexing &amp; slicing, immutability, operators, and the full built-in method toolbox.</p>
+
+  <div class="toc">
+    <p>Table of Contents</p>
+    <ol>
+      <li><a href="#part1">Creating Strings</a></li>
+      <li><a href="#part2">Indexing &amp; Slicing</a></li>
+      <li><a href="#part3">Editing &amp; Deleting Strings</a></li>
+      <li><a href="#part4">String Operations</a></li>
+      <li><a href="#part5">String Functions</a></li>
+    </ol>
+  </div>
+
+  <nav class="part-nav" id="partNav">
+    <a href="#part1" data-part="part1">1. Creating</a>
+    <a href="#part2" data-part="part2">2. Indexing &amp; Slicing</a>
+    <a href="#part3" data-part="part3">3. Editing &amp; Deleting</a>
+    <a href="#part4" data-part="part4">4. Operations</a>
+    <a href="#part5" data-part="part5">5. Functions</a>
+  </nav>
+
+  <h2 id="part1" class="first"><span class="part-eyebrow">Part 1</span>Creating Strings</h2>
+
+  <h3>Overview</h3>
+  <p>Strings in Python are a <strong>sequence of Unicode characters</strong>. This part covers the different ways you can <em>create</em> a string in Python, the quirks around quote characters, and how to build multi-line strings.</p>
+
+  <h3>Key Concepts</h3>
+  <ul>
+    <li>Strings can be created using <strong>single quotes</strong>, <strong>double quotes</strong>, or <strong>triple quotes</strong>.</li>
+    <li>A quote character used to <em>start</em> a string must match the one used to <em>end</em> it — mismatched or unescaped quotes cause a <code>SyntaxError</code>.</li>
+    <li>Choosing the right quote style lets you include quote characters (like an apostrophe) inside your string without extra escaping.</li>
+    <li>Triple-quoted strings (<code>'''...'''</code> or <code>"""..."""</code>) are also used for <strong>multi-line strings</strong>.</li>
+    <li>The built-in <code>str()</code> function can also be used to create a string.</li>
+  </ul>
+
+  <h4>1. Creating Strings — Basic Ways</h4>
+  <p><strong>Using single quotes</strong></p>
+  <pre><code><span class="comment"># Creating</span>
+c = 'Hello'
+print(c)</code></pre>
+  <pre><code><span class="out">Hello</span></code></pre>
+
+  <p><strong>Using double quotes</strong></p>
+  <pre><code>c = "Hello"
+print(c)</code></pre>
+  <pre><code><span class="out">Hello</span></code></pre>
+  <p><strong>Point to remember:</strong> Single and double quotes behave the same for simple strings — the choice mostly matters when the string itself contains a quote character.</p>
+
+  <h4>2. The Apostrophe Problem</h4>
+  <p>If you try to write a string containing an apostrophe using <strong>single quotes</strong>, Python gets confused about where the string ends:</p>
+  <pre><code>'It's raining outside'</code></pre>
+  <pre class="err"><code>File "&lt;ipython-input-16-7f9c68e857c8&gt;", line 1
+    'It's raining outside'
+        ^
+SyntaxError: invalid syntax</code></pre>
+  <p><strong>Why this happens:</strong> Python reads the first <code>'</code> as the start of the string and the <code>'</code> in <code>It's</code> as the <em>end</em> of the string. Everything after that (<code>s raining outside'</code>) becomes invalid code, causing a <code>SyntaxError</code>.</p>
+
+  <p><strong>The fix — use double quotes instead</strong></p>
+  <pre><code>c = "It's raining outside"</code></pre>
+  <p>Because the string is now delimited by <code>"</code>, the apostrophe inside it is treated as a normal character, not a string terminator.</p>
+  <blockquote><strong>Tip:</strong> As a rule of thumb — if your string contains an apostrophe (<code>'</code>), wrap it in double quotes <code>"..."</code>. If it contains a double quote (<code>"</code>), wrap it in single quotes <code>'...'</code>.</blockquote>
+
+  <h4>3. Triple-Quoted Strings</h4>
+  <p>Triple quotes can use either three single quotes or three double quotes:</p>
+  <pre><code>c = '''Hello'''
+print(c)</code></pre>
+  <pre><code><span class="out">Hello</span></code></pre>
+  <pre><code>c = """Hello"""
+print(c)</code></pre>
+  <pre><code><span class="out">Hello</span></code></pre>
+  <p>For a simple one-word string, triple quotes behave just like single/double quotes.</p>
+
+  <p><strong>Triple quotes → Multi-line strings</strong></p>
+  <p>The real power of triple quotes is writing <strong>multi-line strings</strong> directly in the source code:</p>
+  <pre><code>c = '''Hello'''
+print(c)
+<span class="comment"># multi line strings</span></code></pre>
+  <div class="warn">⚠️ Screenshot text unclear — the instructor was in the middle of typing a comment (<code># multi line strings</code>) while demonstrating that triple-quoted strings support multi-line text; the exact multi-line example content wasn't fully visible in the screenshots.</div>
+  <p><strong>Important points:</strong></p>
+  <ul>
+    <li><code>'''...'''</code> and <code>"""..."""</code> are functionally interchangeable.</li>
+    <li>Triple quotes are the standard way to write multi-line strings and docstrings in Python.</li>
+  </ul>
+
+  <h4>4. Creating Strings with str()</h4>
+  <p>You can also explicitly create a string using the built-in <code>str()</code> function:</p>
+  <pre><code>c = str("Hello")
+c</code></pre>
+  <pre><code><span class="out">Out: 'Hello'</span></code></pre>
+  <p><strong>Note:</strong> <code>str()</code> is more commonly used to <strong>convert</strong> other data types (numbers, lists, etc.) into strings, but it can also just wrap an existing string.</p>
+
+  <h3>Things to Remember</h3>
+  <div class="card">
+    <ul>
+      <li>✅ <code>'Hello'</code>, <code>"Hello"</code>, <code>'''Hello'''</code>, <code>"""Hello"""</code> — all create the same string for simple text.</li>
+      <li>⚠️ Mismatched/unescaped quotes (e.g., an apostrophe inside single-quoted text) → <code>SyntaxError: invalid syntax</code>.</li>
+      <li>💡 Use double quotes when the string contains an apostrophe, and vice versa.</li>
+      <li>📝 Triple quotes (<code>'''</code> or <code>"""</code>) are used for <strong>multi-line strings</strong> and docstrings.</li>
+      <li>🔧 <code>str()</code> can also be used to create/convert a string.</li>
+    </ul>
+  </div>
+
+  <h3>Quick Revision</h3>
+  <p>Python lets you create strings with single quotes, double quotes, or triple quotes — they're mostly interchangeable for simple text. The catch: if your string contains the <em>same</em> quote character used to wrap it (e.g., an apostrophe inside <code>'...'</code>), Python throws a <code>SyntaxError</code> because it thinks the string ended early. Fix this by switching to the other quote type. Triple quotes (<code>'''</code> or <code>"""</code>) are the go-to choice for multi-line strings. You can also build a string using the <code>str()</code> function.</p>
+
+  <hr class="section-divider">
+
+  <h2 id="part2"><span class="part-eyebrow">Part 2</span>Indexing &amp; Slicing</h2>
+
+  <h3>Overview</h3>
+  <p>Since a string is a <strong>sequence of characters</strong>, each character has a position (index). This part covers:</p>
+  <ol>
+    <li><strong>Indexing</strong> — accessing a single character from a string.</li>
+    <li><strong>Slicing</strong> — extracting a substring (a range of characters) from a string.</li>
+  </ol>
+
+  <h4>1. Indexing</h4>
+  <p><strong>Basic Indexing</strong></p>
+  <pre><code><span class="comment"># Concept of Indexing</span>
+c = "hello"
+print(c)</code></pre>
+  <pre><code><span class="out">hello</span></code></pre>
+  <p>Every character in a string has a numeric position, starting from <code>0</code> for the first character.</p>
+  <pre><code>print(c[4])</code></pre>
+  <pre><code><span class="out">o</span></code></pre>
+  <p><code>c[4]</code> picks the character at index <code>4</code>. For <code>"hello"</code> (h-e-l-l-o), index <code>4</code> is <code>'o'</code>.</p>
+
+  <p><strong>Out-of-range Index → IndexError</strong></p>
+  <pre><code>print(c[5])</code></pre>
+  <pre class="err"><code>IndexError: string index out of range</code></pre>
+  <p><strong>Why:</strong> <code>"hello"</code> has 5 characters, so valid indices are <code>0</code> to <code>4</code>. Index <code>5</code> doesn't exist.</p>
+  <blockquote>⚠️ <strong>Important:</strong> String indices are always <strong>0-based</strong>. For a string of length <code>n</code>, valid positive indices go from <code>0</code> to <code>n-1</code>.</blockquote>
+  <pre><code>print(c[0])</code></pre>
+  <pre><code><span class="out">h</span></code></pre>
+  <p><code>c[0]</code> always gives the <strong>first character</strong> of the string.</p>
+
+  <p><strong>Types of Indexing</strong></p>
+  <p>Python supports two ways to index a string:</p>
+  <table>
+    <tr><th>Type</th><th>Direction</th><th>Example (for "hello")</th></tr>
+    <tr><td><strong>Positive Indexing</strong></td><td>Counts from the start (left → right), beginning at <code>0</code></td><td><code>c[0]</code> → <code>h</code>, <code>c[4]</code> → <code>o</code></td></tr>
+    <tr><td><strong>Negative Indexing</strong></td><td>Counts from the end (right → left), beginning at <code>-1</code></td><td><code>c[-1]</code> → <code>o</code>, <code>c[-2]</code> → <code>l</code></td></tr>
+  </table>
+
+  <p><strong>Index map for "hello":</strong></p>
+  <table>
+    <tr><th>Character</th><td>h</td><td>e</td><td>l</td><td>l</td><td>o</td></tr>
+    <tr><th>Positive index</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+    <tr><th>Negative index</th><td>-5</td><td>-4</td><td>-3</td><td>-2</td><td>-1</td></tr>
+  </table>
+
+  <pre><code><span class="comment"># Types of Indexing
+# Positive Indexing
+# Negative Indexing</span>
+print(c[-2])</code></pre>
+  <pre><code><span class="out">l</span></code></pre>
+  <p><code>c[-2]</code> accesses the 2nd character from the end → <code>'l'</code>.</p>
+
+  <pre><code>print(c[-4])</code></pre>
+  <pre><code><span class="out">l</span></code></pre>
+  <div class="warn">⚠️ Screenshot text unclear — based on the index map above, <code>c[-4]</code> on <code>"hello"</code> should return <code>'e'</code>, but the screenshot's visible output looked like <code>'l'</code>. Please re-verify this specific output by running the code yourself.</div>
+
+  <p><strong>Important points on indexing:</strong></p>
+  <ul>
+    <li>Indexing returns a <strong>single character</strong> (still a string of length 1) — Python doesn't have a separate "character" type.</li>
+    <li>Negative indexing is handy for accessing characters from the end without needing to know the string's length.</li>
+    <li>Going out of bounds (in either direction) raises <code>IndexError: string index out of range</code>.</li>
+  </ul>
+
+  <h4>2. Slicing</h4>
+  <p>Slicing lets you extract a <strong>substring</strong> using the syntax:</p>
+  <pre><code>string[start : stop : step]</code></pre>
+  <ul>
+    <li><strong>start</strong> → index to begin from (inclusive). Default: <code>0</code>.</li>
+    <li><strong>stop</strong> → index to stop before (exclusive — the character at <code>stop</code> is <strong>not</strong> included). Default: end of string.</li>
+    <li><strong>step</strong> → how many characters to jump each time. Default: <code>1</code>.</li>
+  </ul>
+
+  <p><strong>Basic Slicing</strong></p>
+  <pre><code><span class="comment"># Slicing</span>
+c = "Hello World"
+print(c)</code></pre>
+  <pre><code><span class="out">Hello World</span></code></pre>
+  <pre><code>print(c[0:4])</code></pre>
+  <pre><code><span class="out">Hell</span></code></pre>
+  <p>Takes characters from index <code>0</code> up to (but not including) index <code>4</code>.</p>
+  <pre><code>print(c[0:5])</code></pre>
+  <pre><code><span class="out">Hello</span></code></pre>
+
+  <p><strong>Omitting start or stop</strong></p>
+  <pre><code>print(c[2:])</code></pre>
+  <pre><code><span class="out">llo World</span></code></pre>
+  <p>Leaving <code>stop</code> empty means "<strong>go all the way to the end</strong>."</p>
+  <pre><code>print(c[:4])</code></pre>
+  <pre><code><span class="out">Hell</span></code></pre>
+  <p>Leaving <code>start</code> empty means "<strong>start from the beginning</strong>."</p>
+  <pre><code>print(c[:])</code></pre>
+  <pre><code><span class="out">Hello World</span></code></pre>
+  <p>Leaving out both <code>start</code> and <code>stop</code> returns the <strong>entire string</strong> — this is a common way to make a copy of a string.</p>
+  <pre><code>print(c)</code></pre>
+  <pre><code><span class="out">Hello World</span></code></pre>
+  <p><em>(Confirms <code>c</code> itself is unchanged — slicing doesn't modify the original string, it just returns a new one.)</em></p>
+
+  <p><strong>Slicing with a step</strong></p>
+  <pre><code>print(c[0:8:3])</code></pre>
+  <pre><code><span class="out">HlW</span></code></pre>
+  <p>With <code>step = 3</code>, Python picks characters at indices <code>0, 3, 6</code> → <code>H</code>, <code>l</code>, <code>W</code>.</p>
+  <blockquote><strong>Note:</strong> In the video, the instructor first ran this slice and got a different/incomplete result before re-running it correctly to get <code>HlW</code> — a good reminder to always double check your slice indices against the string's actual character positions.</blockquote>
+
+  <p><strong>Step direction matters</strong></p>
+  <pre><code>print(c[0:6:-1])</code></pre>
+  <div class="warn">⚠️ Screenshot text unclear — no output was visible for this line in the screenshots (it may print an <strong>empty string</strong>). This happens because with a <strong>negative step</strong>, Python expects <code>start</code> to be <em>greater</em> than <code>stop</code> (moving right to left); here <code>start=0</code> and <code>stop=6</code> go the "wrong way" for a negative step, so no characters are returned.</div>
+  <pre><code>print(c[-5:-1:2])</code></pre>
+  <pre><code><span class="out">Wr</span></code></pre>
+  <p>Using negative indices as <code>start</code>/<code>stop</code>: <code>-5</code> corresponds to <code>'W'</code> and it steps forward by <code>2</code> up to (but excluding) index <code>-1</code>, picking <code>'W'</code> and <code>'r'</code>.</p>
+
+  <p><strong>Reversing a String</strong></p>
+  <pre><code>print(c[::-1])</code></pre>
+  <pre><code><span class="out">dlroW olleH</span></code></pre>
+  <p><strong>This is the classic Python trick to reverse a string.</strong> With <code>start</code> and <code>stop</code> omitted and <code>step = -1</code>, Python walks the entire string backward, one character at a time.</p>
+  <pre><code>print(c[-1:-5:-1])</code></pre>
+  <pre><code><span class="out">dlro</span></code></pre>
+  <p>Starting at the last character (<code>-1</code> = <code>'d'</code>) and stepping backward (<code>step = -1</code>) down to (but excluding) <code>-5</code> (<code>'W'</code>), giving <code>'d'</code>, <code>'l'</code>, <code>'r'</code>, <code>'o'</code>.</p>
+
+  <h3>Things to Remember</h3>
+  <div class="card">
+    <ul>
+      <li>✅ <code>str[index]</code> → returns a single character; supports both positive (<code>0, 1, 2, ...</code>) and negative (<code>-1, -2, -3, ...</code>) indices.</li>
+      <li>⚠️ Accessing an index beyond the string's length → <code>IndexError: string index out of range</code>.</li>
+      <li>✅ <code>str[start:stop:step]</code> → slicing syntax; <code>stop</code> is always <strong>exclusive</strong>.</li>
+      <li>💡 Omit <code>start</code> → defaults to the beginning; omit <code>stop</code> → defaults to the end; omit both (<code>str[:]</code>) → full copy of the string.</li>
+      <li>💡 <code>str[::-1]</code> is the go-to idiom for <strong>reversing a string</strong>.</li>
+      <li>⚠️ A negative <code>step</code> requires <code>start</code> to come <em>after</em> <code>stop</code> in the string (i.e., moving right-to-left) — otherwise you get an empty result.</li>
+      <li>🔒 Strings are <strong>immutable</strong> — slicing/indexing never changes the original string; it always returns a new string.</li>
+    </ul>
+  </div>
+
+  <h3>Quick Revision</h3>
+  <p>Indexing (<code>c[i]</code>) fetches a single character — positive indices count from the left starting at <code>0</code>, negative indices count from the right starting at <code>-1</code>; going out of range throws an <code>IndexError</code>. Slicing (<code>c[start:stop:step]</code>) extracts a substring: <code>start</code> is inclusive, <code>stop</code> is exclusive, and <code>step</code> controls the jump size and direction. Omitting parts of the slice gives sensible defaults (start of string, end of string, or the whole string with <code>c[:]</code>). The step can be negative to move backward — and <code>c[::-1]</code> is the classic one-liner to reverse an entire string.</p>
+
+  <hr class="section-divider">
+
+  <h2 id="part3"><span class="part-eyebrow">Part 3</span>Editing &amp; Deleting Strings</h2>
+
+  <h3>Overview</h3>
+  <p>This part answers a key question: <strong>can you edit or delete characters inside a string directly?</strong> The short answer is <strong>no</strong> — and the reason why is one of the most important properties of Python strings: they are <strong>immutable</strong>.</p>
+
+  <h3>Key Concepts</h3>
+  <ul>
+    <li><strong>Strings are an immutable data type</strong> — once created, a string's contents cannot be changed in place.</li>
+    <li>Trying to <strong>assign</strong> a new character to an index → <code>TypeError: 'str' object does not support item assignment</code>.</li>
+    <li>Trying to <strong>delete</strong> a character at an index (or a slice) → <code>TypeError: 'str' object doesn't support item deletion</code>.</li>
+    <li>You <strong>can</strong> delete the entire variable that refers to the string using <code>del</code>, but not individual characters within it.</li>
+    <li>After <code>del</code>-ing a variable, referencing it again raises <code>NameError: name '&lt;var&gt;' is not defined</code>.</li>
+  </ul>
+
+  <h4>1. Editing Strings — Why It Fails</h4>
+  <pre><code>c = "Hello"
+print(c)</code></pre>
+  <pre><code><span class="out">Hello</span></code></pre>
+  <p>Trying to change the first character:</p>
+  <pre><code>c[0] = 'X'</code></pre>
+  <pre class="err"><code>TypeError: 'str' object does not support item assignment</code></pre>
+  <p><strong>Why:</strong> Strings don't support <strong>item assignment</strong>. You cannot reach into a string and overwrite one of its characters the way you can with a list (<code>my_list[0] = 'X'</code> would work fine for a list).</p>
+
+  <pre><code><span class="comment"># Strings are a Immutable Data Type</span>
+c = "world"
+print(c)</code></pre>
+  <pre><code><span class="out">world</span></code></pre>
+  <p>Trying again with a different index:</p>
+  <pre><code>c[5] = "X"</code></pre>
+  <pre class="err"><code>TypeError: 'str' object does not support item assignment</code></pre>
+  <blockquote><strong>Note:</strong> It doesn't matter which index you try (<code>0</code>, <code>5</code>, etc.) — <strong>no index of a string can ever be reassigned</strong>, because the string object itself is immutable.</blockquote>
+
+  <p><strong>If you need a "modified" string...</strong></p>
+  <p>Since strings can't be edited in place, the standard approach is to <strong>create a new string</strong> — e.g., using slicing/concatenation, or string methods (covered in Part 5) — and assign it back to the variable if needed.</p>
+
+  <h4>2. Deleting Parts of a String — Why It Also Fails</h4>
+  <pre><code><span class="comment"># Deletion</span>
+c</code></pre>
+  <pre><code><span class="out">Out: 'world'</span></code></pre>
+  <p>Trying to delete a single character:</p>
+  <pre><code>del c[0]</code></pre>
+  <pre class="err"><code>TypeError: 'str' object doesn't support item deletion</code></pre>
+  <p>Trying to delete a slice of characters:</p>
+  <pre><code>del c[:3:2]</code></pre>
+  <pre class="err"><code>TypeError: 'str' object does not support item deletion</code></pre>
+  <p><strong>Why:</strong> Just like item assignment, <strong>item deletion</strong> isn't supported on strings — you cannot remove a character (or a range of characters) from a string in place, for the same immutability reason.</p>
+
+  <h4>3. Deleting the Entire Variable</h4>
+  <p>While you can't delete <em>part</em> of a string, you <strong>can</strong> delete the <em>variable</em> that points to it entirely, using <code>del</code>:</p>
+  <pre><code>del c</code></pre>
+  <p>After this, the variable <code>c</code> no longer exists:</p>
+  <pre><code>print(c)</code></pre>
+  <pre class="err"><code>NameError: name 'c' is not defined</code></pre>
+  <p><strong>Why:</strong> <code>del c</code> removes the variable binding itself from memory — it's not modifying the string object, it's just deleting the <em>name</em> that referred to it.</p>
+
+  <h3>Things to Remember</h3>
+  <div class="card">
+    <ul>
+      <li>🔒 <strong>Strings are immutable</strong> — this is the single biggest takeaway from this section.</li>
+      <li>❌ <code>str[i] = 'x'</code> → <code>TypeError: 'str' object does not support item assignment</code></li>
+      <li>❌ <code>del str[i]</code> or <code>del str[slice]</code> → <code>TypeError: 'str' object doesn't support item deletion</code></li>
+      <li>✅ <code>del variable_name</code> → works fine; it deletes the <strong>variable</strong>, not the string's contents.</li>
+      <li>⚠️ After <code>del</code>-ing a variable, using it again raises <code>NameError: name '&lt;var&gt;' is not defined</code>.</li>
+      <li>💡 To "change" a string, you must build and assign a <strong>brand-new string</strong> — you can never mutate the original in place.</li>
+    </ul>
+  </div>
+
+  <h3>Quick Revision</h3>
+  <p>Python strings are <strong>immutable</strong>: you cannot assign a new character to an index (<code>c[0] = 'X'</code> → <code>TypeError: item assignment</code>), and you cannot delete a character or slice from a string (<code>del c[0]</code> → <code>TypeError: item deletion</code>). The only thing you <em>can</em> delete is the <strong>variable name itself</strong> (<code>del c</code>), after which trying to use that variable raises a <code>NameError</code>. If you need a modified version of a string, you must always create a new string — the original object can never be changed in place.</p>
+
+  <hr class="section-divider">
+
+  <h2 id="part4"><span class="part-eyebrow">Part 4</span>String Operations</h2>
+
+  <h3>Overview</h3>
+  <p>This part covers the different <strong>operators</strong> you can use directly on strings:</p>
+  <ul>
+    <li>Arithmetic Operations</li>
+    <li>Relational Operations</li>
+    <li>Logical Operations</li>
+    <li>Loops on Strings</li>
+    <li>Membership Operations</li>
+  </ul>
+
+  <h4>1. Arithmetic Operations</h4>
+  <p>Strings support two arithmetic-style operators: <strong><code>+</code></strong> (concatenation) and <strong><code>*</code></strong> (repetition).</p>
+
+  <p><strong>Concatenation (+)</strong></p>
+  <pre><code>"Hello" + "world"</code></pre>
+  <pre><code><span class="out">Out: 'Helloworld'</span></code></pre>
+  <p><strong>Note:</strong> <code>+</code> simply glues the strings together character-for-character — it does <strong>not</strong> insert a space automatically.</p>
+  <pre><code>"Hello" + "-" + "world"</code></pre>
+  <pre><code><span class="out">Out: 'Hello-world'</span></code></pre>
+  <p>You can chain multiple <code>+</code> operators to join several strings (and any literal characters, like <code>"-"</code>, in between).</p>
+
+  <p><strong>Repetition (*)</strong></p>
+  <pre><code>print("*" * 50)</code></pre>
+  <pre><code><span class="out">**************************************************</span></code></pre>
+  <pre><code>print("Hello" * 4)</code></pre>
+  <pre><code><span class="out">HelloHelloHelloHello</span></code></pre>
+  <p><strong>Note:</strong> <code>string * n</code> repeats the entire string <code>n</code> times, back-to-back with no separator.</p>
+
+  <h4>2. Relational Operations</h4>
+  <p>Strings can be compared with <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code> — just like numbers.</p>
+  <pre><code>"Hello" == "World"</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <pre><code>"Hello" != "WOrld"</code></pre>
+  <pre><code><span class="out">Out: True</span></code></pre>
+
+  <p><strong>Comparing with &lt; and &gt; — Lexicographic (Dictionary) Order</strong></p>
+  <pre><code>"Mumbai" > "Pune"
+<span class="comment"># Lexiographically</span></code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <pre><code>"Goa" < "Kolkata"</code></pre>
+  <pre><code><span class="out">Out: True</span></code></pre>
+  <p><strong>How it works:</strong> String comparisons are done <strong>lexicographically</strong> (like dictionary/alphabetical order) — Python compares characters one by one based on their underlying Unicode/ASCII values, until it finds a difference.</p>
+
+  <p><strong>The Case-Sensitivity Trap</strong></p>
+  <pre><code>"kol" < "Kol"</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <p><strong>Why:</strong> String comparison is <strong>case-sensitive</strong>. In ASCII/Unicode, lowercase letters have <strong>higher</strong> numeric values than their uppercase counterparts (<code>'k'</code> &gt; <code>'K'</code>). So <code>"kol"</code> (starting with lowercase <code>k</code>) is actually considered <em>greater than</em> <code>"Kol"</code> (starting with uppercase <code>K</code>) — which is why <code>"kol" &lt; "Kol"</code> evaluates to <code>False</code>.</p>
+  <div class="warn">⚠️ <strong>Important:</strong> Never assume string comparisons ignore case — <code>"apple" == "Apple"</code> is <code>False</code>, and sorting/comparing mixed-case strings can give unintuitive results unless you normalize case first (e.g., with <code>.lower()</code>).</div>
+
+  <h4>3. Logical Operations</h4>
+  <p>Python's <code>and</code>, <code>or</code>, and <code>not</code> work on strings too, based on <strong>truthy/falsy</strong> values.</p>
+
+  <p><strong>Truthy vs Falsy Strings</strong></p>
+  <table>
+    <tr><th>String</th><th>Truthy/Falsy</th></tr>
+    <tr><td><code>""</code> (empty string)</td><td><strong>Falsy</strong> → <code>False</code></td></tr>
+    <tr><td>Any non-empty string (e.g., <code>"wreghr"</code>)</td><td><strong>Truthy</strong> → <code>True</code></td></tr>
+  </table>
+  <pre><code>not ""</code></pre>
+  <pre><code><span class="out">Out: True</span></code></pre>
+  <pre><code>print(not "hello")</code></pre>
+  <pre><code><span class="out">False</span></code></pre>
+  <p><code>not</code> simply flips the truthy/falsy value — since <code>"hello"</code> is truthy, <code>not "hello"</code> is <code>False</code>; since <code>""</code> is falsy, <code>not ""</code> is <code>True</code>.</p>
+
+  <p><strong>and and or Return a Value, Not Just True/False</strong></p>
+  <p>Unlike <code>==</code> or <code>&lt;</code>, the <code>and</code>/<code>or</code> operators on strings <strong>return one of the operands themselves</strong>, not a plain boolean.</p>
+  <pre><code>"hello" and "world"</code></pre>
+  <pre><code><span class="out">Out: 'world'</span></code></pre>
+  <p><strong>Rule for and:</strong> If the first operand is <strong>truthy</strong>, Python evaluates and returns the <strong>second</strong> operand. (If the first operand were falsy, <code>and</code> would short-circuit and return the first operand instead.)</p>
+  <pre><code>"" and "Hello"</code></pre>
+  <pre><code><span class="out">Out: ''</span></code></pre>
+  <p>Here, <code>""</code> is falsy, so <code>and</code> <strong>short-circuits</strong> immediately and returns the first operand (<code>""</code>) without even looking at <code>"Hello"</code>.</p>
+  <pre><code>"" or "world"</code></pre>
+  <pre><code><span class="out">Out: 'world'</span></code></pre>
+  <p><strong>Rule for or:</strong> If the first operand is <strong>falsy</strong>, Python moves on and returns the <strong>second</strong> operand.</p>
+  <pre><code>"hello" or "world"</code></pre>
+  <pre><code><span class="out">Out: 'hello'</span></code></pre>
+  <p>Here, <code>"hello"</code> is truthy, so <code>or</code> short-circuits immediately and returns the first operand (<code>"hello"</code>) without evaluating <code>"world"</code>.</p>
+  <blockquote>💡 <strong>Quick mental model:</strong>
+    <ul>
+      <li><code>and</code> → returns the <strong>first falsy</strong> value, or the <strong>last</strong> value if all are truthy.</li>
+      <li><code>or</code> → returns the <strong>first truthy</strong> value, or the <strong>last</strong> value if all are falsy.</li>
+    </ul>
+  </blockquote>
+
+  <h4>4. Loops on Strings</h4>
+  <p>Since a string is a sequence, you can iterate over it directly with a <code>for</code> loop — each iteration gives you one character.</p>
+  <pre><code>c = "hello world"
+for i in c:
+    print(i)</code></pre>
+  <pre><code><span class="out">h
+e
+l
+l
+o
+
+w
+o
+r
+l
+d</span></code></pre>
+  <p><strong>Note:</strong> The loop prints <strong>every character</strong>, including the space between <code>"hello"</code> and <code>"world"</code> (shown above as a blank line).</p>
+
+  <p><strong>Combining Loops with Slicing</strong></p>
+  <p>You can loop over a <strong>slice</strong> of the string instead of the whole thing:</p>
+  <pre><code>c = "hello world"
+for i in c[2:7:2]:
+    print(i)</code></pre>
+  <pre><code><span class="out">l
+o
+w</span></code></pre>
+  <p>This loops only over the characters picked out by the slice <code>c[2:7:2]</code> (start=2, stop=7, step=2) — i.e., indices <code>2, 4, 6</code> → <code>'l'</code>, <code>'o'</code>, <code>'w'</code>.</p>
+  <div class="warn">⚠️ Screenshot text unclear — one screenshot showed a loop's output printing characters vertically (<code>w, o, l, l, e, h</code>), but the exact code that produced it wasn't visible. It appeared to demonstrate looping over a <strong>reversed or sliced</strong> version of the string, similar to the pattern above — worth re-running examples like <code>for i in c[::-1]: print(i)</code> yourself to see reversed iteration in action.</div>
+
+  <h4>5. Membership Operations (in / not in)</h4>
+  <p>These check whether a character (or substring) exists inside a string, returning <code>True</code> or <code>False</code>.</p>
+  <pre><code>'h' in c</code></pre>
+  <pre><code><span class="out">Out: True</span></code></pre>
+  <pre><code>'H' in c</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <p><strong>Note:</strong> Just like relational operations, membership checks are <strong>case-sensitive</strong> — <code>'h'</code> and <code>'H'</code> are treated as different characters.</p>
+  <pre><code>'world' not in c</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <p><strong>Reading this carefully:</strong> <code>'world' not in c</code> is <code>False</code> because <code>'world'</code> <strong>is</strong> actually present in <code>c</code> — <code>not in</code> returns <code>True</code> only when the item is <strong>absent</strong>.</p>
+  <pre><code>'n' in c</code></pre>
+  <pre><code><span class="out">Out: True</span></code></pre>
+
+  <h3>Things to Remember</h3>
+  <div class="card">
+    <ul>
+      <li>➕ <code>+</code> concatenates strings (no automatic spacing); <code>*</code> repeats a string <code>n</code> times.</li>
+      <li>🔤 Relational operators (<code>&lt;</code>, <code>&gt;</code>, <code>==</code>, etc.) compare strings <strong>lexicographically</strong>, based on character-by-character Unicode/ASCII values.</li>
+      <li>🔠 String comparisons and membership checks are <strong>always case-sensitive</strong> — lowercase letters have higher ASCII values than uppercase.</li>
+      <li>🧠 <code>and</code> / <code>or</code> on strings don't return plain <code>True</code>/<code>False</code> — they return one of the <strong>actual operands</strong>, based on truthy/falsy short-circuiting.</li>
+      <li>⚪ Falsy string: only <code>""</code> (empty string). Every non-empty string is truthy.</li>
+      <li>🔁 A <code>for</code> loop over a string yields its characters one at a time, in order (including whitespace); this can be combined with slicing (<code>c[start:stop:step]</code>).</li>
+      <li>🔎 <code>in</code> / <code>not in</code> check whether a character or substring exists within a string — case-sensitive.</li>
+    </ul>
+  </div>
+
+  <h3>Quick Revision</h3>
+  <p>Strings support arithmetic-style operators: <code>+</code> concatenates and <code>*</code> repeats. Relational operators compare strings lexicographically using character ASCII values — and remember, comparisons are case-sensitive (lowercase &gt; uppercase in ASCII). Logical operators (<code>and</code>, <code>or</code>, <code>not</code>) work using truthy/falsy rules (<code>""</code> is falsy, everything else is truthy) and — unlike numeric comparisons — <code>and</code>/<code>or</code> return one of the actual operand strings rather than a plain boolean. You can loop directly over a string's characters with <code>for i in string:</code>, optionally combined with slicing. Finally, <code>in</code> / <code>not in</code> let you check membership of a character or substring, again case-sensitively.</p>
+
+  <hr class="section-divider">
+
+  <h2 id="part5"><span class="part-eyebrow">Part 5</span>String Functions</h2>
+
+  <h3>Overview</h3>
+  <p>Python strings come with a large set of <strong>built-in methods</strong> (functions attached to the string object, called with <code>string.method()</code>). This part walks through the most commonly used ones: general-purpose functions, case conversion, counting, searching, checks, formatting, splitting, joining, replacing, and stripping whitespace.</p>
+
+  <h3>Common (Built-in) Functions</h3>
+  <p>These aren't string <em>methods</em> — they're general Python functions that happen to work well on strings:</p>
+  <pre><code>c = "kolkata"
+len(c)</code></pre>
+  <pre><code><span class="out">Out: 7</span></code></pre>
+  <p><code>len()</code> returns the number of characters in the string.</p>
+  <pre><code>max(c)</code></pre>
+  <pre><code><span class="out">Out: 't'</span></code></pre>
+  <pre><code>min(c)</code></pre>
+  <pre><code><span class="out">Out: 'a'</span></code></pre>
+  <p><code>max()</code>/<code>min()</code> return the character with the highest/lowest Unicode value in the string.</p>
+  <pre><code>sorted(c)</code></pre>
+  <pre><code><span class="out">Out: ['a', 'a', 'k', 'k', 'l', 'o', 't']</span></code></pre>
+  <pre><code>sorted(c, reverse=True)</code></pre>
+  <pre><code><span class="out">Out: ['t', 'o', 'l', 'k', 'k', 'a', 'a']</span></code></pre>
+  <p><code>sorted()</code> returns a <strong>list</strong> of the string's characters in sorted order (ascending by default; pass <code>reverse=True</code> for descending).</p>
+
+  <h4>1. Capitalize / Title / Upper / Lower / Swapcase</h4>
+  <pre><code>"it is raining today".capitalize()</code></pre>
+  <pre><code><span class="out">Out: 'It is raining today'</span></code></pre>
+  <p><code>.capitalize()</code> uppercases only the <strong>first letter of the whole string</strong>, lowercasing the rest.</p>
+  <pre><code>"it is raining today".title()</code></pre>
+  <pre><code><span class="out">Out: 'It Is Raining Today'</span></code></pre>
+  <p><code>.title()</code> uppercases the <strong>first letter of every word</strong>.</p>
+  <pre><code>c = "kolkata"
+c.upper()</code></pre>
+  <pre><code><span class="out">Out: 'KOLKATA'</span></code></pre>
+  <pre><code>c.upper().lower()</code></pre>
+  <pre><code><span class="out">Out: 'kolkata'</span></code></pre>
+  <p><code>.upper()</code> / <code>.lower()</code> convert the entire string to upper/lower case. Methods can be <strong>chained</strong> — <code>.upper().lower()</code> calls <code>.lower()</code> on the result of <code>.upper()</code>.</p>
+  <pre><code>"KoLkAtA".swapcase()</code></pre>
+  <pre><code><span class="out">Out: 'kOlKaTa'</span></code></pre>
+  <p><code>.swapcase()</code> flips the case of every character — upper becomes lower and vice versa.</p>
+
+  <h4>2. Count</h4>
+  <pre><code>"it is raining".count("x")</code></pre>
+  <pre><code><span class="out">Out: 0</span></code></pre>
+  <pre><code>"it is raining".count("i")</code></pre>
+  <pre><code><span class="out">Out: 4</span></code></pre>
+  <pre><code>"it is raining".count("is")</code></pre>
+  <pre><code><span class="out">Out: 1</span></code></pre>
+  <pre><code>"it is raining".count("ing")</code></pre>
+  <pre><code><span class="out">Out: 1</span></code></pre>
+  <p><code>.count(sub)</code> returns how many <strong>non-overlapping</strong> times <code>sub</code> appears in the string.</p>
+
+  <h4>3. Find / Index</h4>
+  <pre><code>"it is raining".find("x")</code></pre>
+  <pre><code><span class="out">Out: -1</span></code></pre>
+  <pre><code>"it is raining".find("g")</code></pre>
+  <pre><code><span class="out">Out: 12</span></code></pre>
+  <pre><code>"it is raining".index("x")</code></pre>
+  <pre class="err"><code>ValueError: substring not found</code></pre>
+  <pre><code>"it is raining".index("rain")</code></pre>
+  <pre><code><span class="out">Out: 6</span></code></pre>
+  <p><strong>Key difference between .find() and .index():</strong></p>
+  <table>
+    <tr><th>Method</th><th>Substring found</th><th>Substring NOT found</th></tr>
+    <tr><td><code>.find(sub)</code></td><td>Returns the starting index</td><td>Returns <code>-1</code></td></tr>
+    <tr><td><code>.index(sub)</code></td><td>Returns the starting index</td><td>Raises <code>ValueError: substring not found</code></td></tr>
+  </table>
+  <blockquote>💡 Use <code>.find()</code> when a missing substring is a normal case you want to handle gracefully; use <code>.index()</code> when you'd rather the program fail loudly if the substring is expected to be there.</blockquote>
+
+  <h4>4. endswith / startswith</h4>
+  <pre><code>"it is raining".endswith("ing")</code></pre>
+  <pre><code><span class="out">Out: True</span></code></pre>
+  <pre><code>"it is raining".endswith("ingef")</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <pre><code>"it is raining".startswith("it")</code></pre>
+  <pre><code><span class="out">Out: True</span></code></pre>
+  <p>These check whether the string <strong>ends with</strong> or <strong>begins with</strong> a given substring, returning <code>True</code>/<code>False</code>.</p>
+
+  <h4>5. format</h4>
+  <p><code>.format()</code> lets you build strings with placeholders (<code>{}</code>) that get filled in with values.</p>
+  <pre><code>"Hello my name is {} and I am {}".format("Nitish", 30)</code></pre>
+  <pre><code><span class="out">Out: 'Hello my name is Nitish and I am 30'</span></code></pre>
+  <p>Empty <code>{}</code> placeholders are filled <strong>in order</strong> by the arguments passed to <code>.format()</code>.</p>
+  <pre><code>"Hello my name is {1} and I am {0}".format("Nitish", 30)</code></pre>
+  <pre><code><span class="out">Out: 'Hello my name is 30 and I am Nitish'</span></code></pre>
+  <p>You can put a <strong>positional index</strong> inside <code>{}</code> to control which argument fills which placeholder — <code>{1}</code> refers to the 2nd argument (<code>30</code>), <code>{0}</code> to the 1st (<code>"Nitish"</code>).</p>
+  <pre><code>"Hello my name is {age} and I am {name}".format(name="Nitish", age=30)</code></pre>
+  <pre><code><span class="out">Out: 'Hello my name is 30 and I am Nitish'</span></code></pre>
+  <p>You can also use <strong>named placeholders</strong> matched to keyword arguments — note the placeholder name doesn't have to "make sense" relative to the value; Python just matches the placeholder name to the keyword argument name.</p>
+  <pre><code>"Hello my name is {age} and I am {weight}".format(name="Nitish", age=30, weight=70)</code></pre>
+  <pre><code><span class="out">Out: 'Hello my name is 30 and I am 70'</span></code></pre>
+  <p>Extra keyword arguments that aren't referenced by any <code>{}</code> placeholder (like <code>name</code> here) are simply ignored.</p>
+
+  <h4>6. isalnum / isalpha / isdecimal / isdigit / isidentifier</h4>
+  <p>These all return <code>True</code>/<code>False</code> checks about what kind of characters a string contains.</p>
+  <pre><code>"FLAT20&".isalnum()</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <p><code>.isalnum()</code> checks if <strong>all</strong> characters are letters or digits — fails here because of <code>&amp;</code>.</p>
+  <pre><code>"FLAT20".isalpha()</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <p><code>.isalpha()</code> checks if <strong>all</strong> characters are letters — fails here because of the digits <code>2</code>, <code>0</code>.</p>
+  <pre><code>"20A".isdigit()</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <p><code>.isdigit()</code> checks if <strong>all</strong> characters are digits — fails here because of the letter <code>A</code>.</p>
+  <pre><code>"hello world".isidentifier()</code></pre>
+  <pre><code><span class="out">Out: False</span></code></pre>
+  <pre><code>"hello_world".isidentifier()</code></pre>
+  <pre><code><span class="out">Out: True</span></code></pre>
+  <p><code>.isidentifier()</code> checks whether the string would be a <strong>valid Python variable name</strong> — spaces aren't allowed (so <code>"hello world"</code> fails), but underscores are fine (so <code>"hello_world"</code> passes).</p>
+  <blockquote>💡 <code>isdecimal()</code> is also part of this family (not shown running here) — it's similar to <code>isdigit()</code> but stricter about which numeric characters count as "decimal."</blockquote>
+
+  <h4>7. Split</h4>
+  <pre><code>"who is the pm of india".split()</code></pre>
+  <pre><code><span class="out">Out: ['who', 'is', 'the', 'pm', 'of', 'india']</span></code></pre>
+  <p>With no argument, <code>.split()</code> breaks the string into a <strong>list of words</strong>, splitting on any whitespace.</p>
+  <pre><code>"who is the pm of india".split("i")</code></pre>
+  <pre><code><span class="out">Out: ['who ', 's the pm of ', 'nd', 'a']</span></code></pre>
+  <p>Passing a separator splits on <strong>every occurrence</strong> of that exact substring, removing it from the result.</p>
+  <pre><code>"who is the pm of india".split("x")</code></pre>
+  <pre><code><span class="out">Out: ['who is the pm of india']</span></code></pre>
+  <p>If the separator doesn't appear anywhere in the string, <code>.split()</code> returns a list containing the <strong>entire original string</strong> as its only element.</p>
+
+  <h4>8. Join</h4>
+  <p><code>.join()</code> is the reverse of <code>.split()</code> — it combines a list of strings into one string, using the string it's called on as the separator.</p>
+  <pre><code>" ".join(['who', 'is', 'the', 'pm', 'of', 'india'])</code></pre>
+  <pre><code><span class="out">Out: 'who is the pm of india'</span></code></pre>
+  <pre><code>"/".join(['who', 'is', 'the', 'pm', 'of', 'india'])</code></pre>
+  <pre><code><span class="out">Out: 'who/is/the/pm/of/india'</span></code></pre>
+  <pre><code>"-".join(['who', 'is', 'the', 'pm', 'of', 'india'])</code></pre>
+  <pre><code><span class="out">Out: 'who-is-the-pm-of-india'</span></code></pre>
+  <p>Whatever string <code>.join()</code> is called on becomes the <strong>glue</strong> placed between every element of the list.</p>
+
+  <h4>9. Replace</h4>
+  <pre><code>"Hi my name is Nitish".replace("Nitish", "Amit")</code></pre>
+  <pre><code><span class="out">Out: 'Hi my name is Amit'</span></code></pre>
+  <p><code>.replace(old, new)</code> returns a new string with <strong>every occurrence</strong> of <code>old</code> swapped for <code>new</code>.</p>
+
+  <h4>10. Strip</h4>
+  <pre><code>name = "          nitish          "
+name.strip()</code></pre>
+  <pre><code><span class="out">Out: 'nitish'</span></code></pre>
+  <p><code>.strip()</code> removes leading and trailing <strong>whitespace</strong> (spaces, tabs, newlines) from a string — it does <strong>not</strong> touch whitespace in the middle.</p>
+  <blockquote>💡 <strong>Related methods</strong> (seen via autocomplete, not individually demonstrated): <code>.lstrip()</code> strips only from the left, <code>.rstrip()</code> strips only from the right. Other string methods available include <code>.partition()</code>, <code>.rpartition()</code>, <code>.rfind()</code>, <code>.rindex()</code>, <code>.rjust()</code>, <code>.rsplit()</code>, and <code>.maketrans()</code> — worth exploring in the Python docs or via tab-autocomplete in a notebook.</blockquote>
+
+  <h3>Things to Remember</h3>
+  <div class="card">
+    <ul>
+      <li>🔡 Case methods: <code>.capitalize()</code> (first letter of string), <code>.title()</code> (first letter of each word), <code>.upper()</code>, <code>.lower()</code>, <code>.swapcase()</code> — all return a <strong>new</strong> string (strings are immutable).</li>
+      <li>🔍 <code>.count(sub)</code> counts non-overlapping occurrences; <code>.find(sub)</code> returns <code>-1</code> if missing; <code>.index(sub)</code> raises <code>ValueError</code> if missing.</li>
+      <li>✅ <code>.startswith()</code> / <code>.endswith()</code> check prefixes/suffixes and return booleans.</li>
+      <li>📝 <code>.format()</code> fills <code>{}</code> placeholders — positionally, by index (<code>{0}</code>, <code>{1}</code>), or by keyword name (<code>{name}</code>).</li>
+      <li>❓ The <code>is...()</code> family (<code>isalnum</code>, <code>isalpha</code>, <code>isdigit</code>, <code>isidentifier</code>, etc.) checks whether <strong>all</strong> characters in the string satisfy a condition.</li>
+      <li>✂️ <code>.split(sep)</code> breaks a string into a list (default: split on whitespace); <code>.join(list)</code> does the reverse, gluing a list back into a string.</li>
+      <li>🔄 <code>.replace(old, new)</code> swaps every occurrence of a substring.</li>
+      <li>🧹 <code>.strip()</code> removes leading/trailing whitespace only; use <code>.lstrip()</code>/<code>.rstrip()</code> for one-sided stripping.</li>
+    </ul>
+  </div>
+
+  <h3>Quick Revision</h3>
+  <p>Strings have a rich set of built-in methods. For case handling: <code>.capitalize()</code>, <code>.title()</code>, <code>.upper()</code>, <code>.lower()</code>, <code>.swapcase()</code>. For searching: <code>.count()</code> counts matches, <code>.find()</code> returns <code>-1</code> if not found while <code>.index()</code> raises an error, and <code>.startswith()</code>/<code>.endswith()</code> check prefixes/suffixes. <code>.format()</code> builds strings from placeholders filled positionally, by index, or by keyword. The <code>is...()</code> methods (<code>isalnum</code>, <code>isalpha</code>, <code>isdigit</code>, <code>isidentifier</code>, etc.) validate what kind of characters a string contains. <code>.split()</code> turns a string into a list of pieces; <code>.join()</code> does the reverse. <code>.replace()</code> swaps substrings, and <code>.strip()</code> (plus <code>.lstrip()</code>/<code>.rstrip()</code>) trims whitespace from the ends.</p>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+
+<button class="to-top" id="toTop" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  (function(){
+    // Wrap every table for horizontal scroll on narrow screens
+    document.querySelectorAll('.wrap table').forEach(function(t){
+      var wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      t.parentNode.insertBefore(wrap, t);
+      wrap.appendChild(t);
+    });
+
+    // Scroll-spy on the sticky part nav
+    var links = Array.prototype.slice.call(document.querySelectorAll('#partNav a'));
+    var sections = links.map(function(a){ return document.getElementById(a.dataset.part); });
+    function setActive(){
+      var pos = window.scrollY + 90;
+      var current = sections[0];
+      sections.forEach(function(sec){ if (sec && sec.offsetTop <= pos) current = sec; });
+      links.forEach(function(a){
+        a.classList.toggle('active', current && a.dataset.part === current.id);
+      });
+    }
+    setActive();
+    window.addEventListener('scroll', setActive, { passive: true });
+
+    // Back-to-top button
+    var toTop = document.getElementById('toTop');
+    window.addEventListener('scroll', function(){
+      toTop.classList.toggle('show', window.scrollY > 600);
+    }, { passive: true });
+    toTop.addEventListener('click', function(){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+</script>
+
+</body>
+</html>

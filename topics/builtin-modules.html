@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Built-in Modules — Python with Dutta</title>
+<script src="../assets/theme.js"></script>
+<style>
+  :root{
+    --bg:#f7f8fc;
+    --bg-soft:#ffffff;
+    --card:#ffffff;
+    --border:#e2e4ef;
+    --text:#1b1d29;
+    --text-para:#3a3d4d;
+    --text-dim:#666a7d;
+    --accent:#c98a00;
+    --accent2:#6a58f5;
+    --accent3:#0f9d63;
+    --radius:14px;
+    --grad-glow-1:rgba(106,88,245,.10);
+    --grad-glow-2:rgba(15,157,99,.08);
+    --h1-grad-1:#1b1d29;
+    --h1-grad-2:#5a4fd6;
+    --eyebrow-bg:rgba(201,138,0,.10);
+    --eyebrow-border:rgba(201,138,0,.30);
+    --quote-bg:rgba(106,88,245,.06);
+    --warn-bg:rgba(201,138,0,.08);
+    --warn-border:rgba(201,138,0,.35);
+    --err-bg:rgba(220,38,38,.06);
+    --err-border:rgba(220,38,38,.35);
+    --err-text:#b42318;
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0f1117;
+    --bg-soft:#161925;
+    --card:#1b1e2b;
+    --border:#2a2e40;
+    --text:#e8e9f0;
+    --text-para:#d3d5e0;
+    --text-dim:#9295a8;
+    --accent:#ffd43b;
+    --accent2:#7c6cff;
+    --accent3:#3ddc97;
+    --grad-glow-1:rgba(124,108,255,.20);
+    --grad-glow-2:rgba(61,220,151,.12);
+    --h1-grad-1:#fff;
+    --h1-grad-2:#b9beff;
+    --eyebrow-bg:rgba(255,212,59,.12);
+    --eyebrow-border:rgba(255,212,59,.35);
+    --quote-bg:rgba(124,108,255,.08);
+    --warn-bg:rgba(255,212,59,.10);
+    --warn-border:rgba(255,212,59,.35);
+    --err-bg:rgba(248,113,113,.10);
+    --err-border:rgba(248,113,113,.35);
+    --err-text:#ff9a91;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--grad-glow-1), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, var(--grad-glow-2), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.7;
+    padding:0 16px 80px;
+    transition:background-color .2s, color .2s;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:.85rem;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    transition:background-color .2s, border-color .2s, transform .15s;
+  }
+  .theme-toggle:hover{border-color:var(--accent2); transform:translateY(-1px);}
+
+  .wrap{max-width:800px; margin:0 auto;}
+
+  .page-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:32px 0 24px;
+  }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text);
+    text-decoration:none;
+    font-size:.9rem;
+    font-weight:600;
+    padding:9px 16px 9px 12px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:var(--card);
+    transition:border-color .2s, color .2s, transform .15s;
+  }
+  .back:hover{color:var(--accent2); border-color:var(--accent2); transform:translateX(-2px);}
+
+  .eyebrow{
+    display:inline-block;
+    padding:5px 12px;
+    background:var(--eyebrow-bg);
+    color:var(--accent);
+    border:1px solid var(--eyebrow-border);
+    border-radius:999px;
+    font-size:.75rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--h1-grad-1), var(--h1-grad-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .lede{color:var(--text-dim); font-size:1.02rem; margin-bottom:36px;}
+
+  h2{
+    font-size:1.3rem;
+    margin:40px 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+  h3{font-size:1.05rem; color:var(--accent3); margin:26px 0 10px;}
+
+  p{color:var(--text-para);}
+
+  ul, ol{color:var(--text-para); padding-left:22px;}
+  li{margin:6px 0;}
+
+  code{
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    padding:2px 6px;
+    border-radius:5px;
+    font-family:"Fira Code", Consolas, monospace;
+    font-size:.9em;
+    color:var(--accent);
+  }
+
+  pre{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    overflow-x:auto;
+    margin:14px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--text-para);
+    font-size:.92rem;
+  }
+  pre .comment{color:var(--text-dim);}
+  pre .out{color:var(--accent3);}
+  pre.err code{color:var(--err-text);}
+  pre.err{border-color:var(--err-border); background:var(--err-bg);}
+
+  blockquote{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent2);
+    border-radius:8px;
+    color:var(--text-dim);
+    font-size:.94rem;
+  }
+  blockquote strong{color:var(--text);}
+
+  .warn{
+    margin:16px 0;
+    padding:12px 18px;
+    background:var(--warn-bg);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    color:var(--text-para);
+    font-size:.94rem;
+  }
+  .warn strong{color:var(--text);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:.92rem;
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  th{color:var(--accent); font-weight:600;}
+  td{color:var(--text-para);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+
+  .mod{
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    margin:16px 0;
+    background:var(--card);
+  }
+  .mod h3{margin-top:0;}
+
+  footer{
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.85rem;
+  }
+  footer .back{margin-bottom:10px;}
+  footer .tag{display:block;}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" onclick="pwdToggleTheme()" aria-label="Toggle light/dark theme">🌙 Dark</button>
+
+<div class="wrap">
+
+  <div class="page-nav">
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="eyebrow">Module 5 · Functions &amp; Modules</span>
+  </div>
+
+  <h1>Python Built-in Modules</h1>
+  <p class="lede">A module is just a code library. Discover what's available with <code>help('modules')</code>, then take a hands-on tour of <code>math</code>, <code>random</code>, <code>time</code>, and <code>os</code>.</p>
+
+  <h2>Overview</h2>
+  <p>This topic covers <strong>Python modules</strong> — what they are, how to discover which ones are available, and how to use some of the most common built-in modules (<code>math</code>, <code>random</code>, <code>time</code>, <code>os</code>) through hands-on examples in Jupyter Notebook.</p>
+
+  <h2>Key Concepts</h2>
+  <ul>
+    <li>A <strong>module</strong> is essentially a <strong>code library</strong> — a file containing a set of functions you want to use in your application.</li>
+    <li>Python ships with many <strong>built-in modules</strong> you can use without installing anything extra.</li>
+    <li>You can list all available modules using <code>help('modules')</code>.</li>
+    <li>Modules must be <strong>imported</strong> before their functions can be used.</li>
+    <li>Trying to import a module that doesn't exist raises a <code>ModuleNotFoundError</code>.</li>
+  </ul>
+
+  <h2>Detailed Explanation</h2>
+
+  <h3>What are Modules?</h3>
+  <blockquote>"Consider a module to be the same as a code library. A file containing a set of functions you want to include in your application."</blockquote>
+  <p><strong>Examples of Python modules covered in this lesson:</strong></p>
+  <ul>
+    <li><code>math</code></li>
+    <li><code>random</code></li>
+    <li><code>os</code></li>
+    <li><code>time</code></li>
+  </ul>
+
+  <h3>Listing All Available Modules</h3>
+  <p>You can see every module installed/available in your Python environment with:</p>
+  <pre><code>help('modules')</code></pre>
+  <p><strong>What happens:</strong></p>
+  <ul>
+    <li>It prints: <code>Please wait a moment while I gather a list of all available modules...</code></li>
+    <li>You may see a <strong>deprecation warning</strong> like:
+      <pre><code>ShimWarning: The `IPython.kernel` package has been deprecated since IPython 4.0.
+You should import from ipykernel or jupyter_client instead.</code></pre>
+      ⚠️ This is just a warning from the IPython/Jupyter internals — it does not stop the module list from being generated, and can generally be ignored.
+    </li>
+    <li>It then prints a <strong>huge list of module names</strong> in columns (e.g., <code>numpy</code>, <code>pandas</code>, <code>os</code>, <code>time</code>, <code>math</code>, <code>random</code>, <code>sklearn</code>, <code>matplotlib</code>, <code>sqlite3</code>, <code>threading</code>, <code>json</code>-related modules, <code>win32*</code> modules on Windows, etc.). This list includes:
+      <ul>
+        <li>Standard library modules (e.g., <code>os</code>, <code>time</code>, <code>math</code>, <code>random</code>, <code>json</code>, <code>csv</code>, <code>threading</code>, <code>sqlite3</code>)</li>
+        <li>Third-party/installed packages (e.g., <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>, <code>sklearn</code>, <code>sqlalchemy</code>)</li>
+        <li>Internal/private modules (prefixed with <code>_</code>, e.g., <code>_ast</code>, <code>_bisect</code>, <code>_codecs</code>)</li>
+      </ul>
+    </li>
+  </ul>
+  <blockquote>💡 <strong>Tip:</strong> <code>help('modules')</code> is a great way to explore what's available in your environment, but the output can be long — scroll through it or search for a keyword.</blockquote>
+
+  <h3>Importing a Module</h3>
+  <p>Before using any function from a module, you must <strong>import</strong> it:</p>
+  <pre><code>import math
+import random
+import os
+import time</code></pre>
+
+  <p><strong>Important Point:</strong> If you misspell a module name or import something that isn't a real module, Python raises a <code>ModuleNotFoundError</code>.</p>
+
+  <p><strong>Example of an error:</strong></p>
+  <pre><code>import mathrhe</code></pre>
+  <pre class="err"><code>ModuleNotFoundError: No module named 'mathrhe'</code></pre>
+
+  <p><strong>C vs Python — importing a library:</strong></p>
+  <table>
+    <tr><th></th><th>C</th><th>Python</th></tr>
+    <tr><td>Bring in a library</td><td><code>#include &lt;stdio.h&gt;</code></td><td><code>import math</code></td></tr>
+    <tr><td>Syntax</td><td><code>#include &lt;filename.h&gt;</code></td><td><code>import module_name</code></td></tr>
+    <tr><td>When it happens</td><td>Preprocessor step (before compilation)</td><td>Runtime (when the line executes)</td></tr>
+  </table>
+  <p>Same purpose in both — reuse existing code — just a different keyword and mechanism.</p>
+
+  <p><strong>Things to Remember:</strong></p>
+  <ul>
+    <li>Module names are <strong>case-sensitive</strong> and must match exactly.</li>
+    <li><code>ModuleNotFoundError</code> means Python cannot find any module with that exact name — check spelling first.</li>
+  </ul>
+
+  <div class="mod">
+    <h3>The math Module</h3>
+    <p>Used for mathematical operations.</p>
+    <table>
+      <tr><th>Function</th><th>Example</th><th>Result</th><th>Description</th></tr>
+      <tr><td><code>math.pi</code></td><td><code>math.pi</code></td><td><code>3.141592653589793</code></td><td>Value of π</td></tr>
+      <tr><td><code>math.e</code></td><td><code>math.e</code></td><td><code>2.718281828459045</code></td><td>Euler's number</td></tr>
+      <tr><td><code>math.factorial(n)</code></td><td><code>math.factorial(5)</code></td><td><code>120</code></td><td>Factorial of n (5! = 120)</td></tr>
+      <tr><td><code>math.ceil(x)</code></td><td><code>math.ceil(6.3)</code></td><td><code>7</code></td><td>Rounds <strong>up</strong> to the nearest integer</td></tr>
+      <tr><td><code>math.floor(x)</code></td><td><code>math.floor(6.9)</code></td><td><code>6</code></td><td>Rounds <strong>down</strong> to the nearest integer</td></tr>
+      <tr><td><code>math.sqrt(x)</code></td><td><code>math.sqrt(100)</code></td><td><code>10.0</code></td><td>Square root (always returns a float)</td></tr>
+    </table>
+    <p><strong>Key takeaway:</strong> <code>ceil()</code> always rounds up, <code>floor()</code> always rounds down — regardless of the decimal value (e.g., <code>6.1</code> would still floor to <code>6</code> and ceil to <code>7</code>).</p>
+  </div>
+
+  <div class="mod">
+    <h3>The random Module</h3>
+    <p>Used for generating random numbers and shuffling data.</p>
+    <pre><code>import random
+
+random.randint(1, 100)   <span class="comment"># Returns a random integer between 1 and 100 (inclusive)</span></code></pre>
+    <p>Example output: <code>54</code></p>
+    <pre><code>a = [1, 2, 3, 4, 5]
+random.shuffle(a)        <span class="comment"># Shuffles the list IN PLACE (no return value needed)</span>
+a</code></pre>
+    <p>Example output: <code>[1, 4, 5, 2, 3]</code> (order will vary each run)</p>
+    <p><strong>Important Points:</strong></p>
+    <ul>
+      <li><code>random.randint(a, b)</code> → returns a random <strong>integer</strong> N such that <code>a &lt;= N &lt;= b</code> (both bounds inclusive).</li>
+      <li><code>random.shuffle(list)</code> → shuffles the given list <strong>in place</strong>; it modifies the original list rather than returning a new one.</li>
+    </ul>
+  </div>
+
+  <div class="mod">
+    <h3>The time Module</h3>
+    <p>Used for working with time-related values.</p>
+    <pre><code>import time
+
+time.time()     <span class="comment"># Returns current time as a Unix timestamp (seconds since epoch)</span></code></pre>
+    <p>Example output: <code>1625459281.405317</code></p>
+    <pre><code>time.ctime()    <span class="comment"># Converts current time into a human-readable string</span></code></pre>
+    <p>Example output: <code>'Mon Jul  5 09:58:08 2021'</code></p>
+    <pre><code>time.sleep(1)   <span class="comment"># Pauses program execution for the given number of seconds</span></code></pre>
+    <p><strong>Example demonstrating time.sleep():</strong></p>
+    <pre><code>print("Hello")
+time.sleep(1)
+print("World")</code></pre>
+    <p>Output:</p>
+    <pre><code><span class="out">Hello
+World</span></code></pre>
+    <p>("Hello" prints, then execution pauses for 1 second, then "World" prints.)</p>
+    <p><strong>Important Points:</strong></p>
+    <ul>
+      <li><code>time.time()</code> → raw numeric timestamp (useful for measuring elapsed time / performance).</li>
+      <li><code>time.ctime()</code> → human-friendly formatted date/time string.</li>
+      <li><code>time.sleep(seconds)</code> → delays/pauses code execution — useful for simulating wait times or throttling loops.</li>
+    </ul>
+  </div>
+
+  <div class="mod">
+    <h3>The os Module</h3>
+    <p>Used to interact with the operating system (files, directories, paths).</p>
+    <pre><code>import os
+
+os.getcwd()     <span class="comment"># Returns the current working directory</span></code></pre>
+    <p>Example output:</p>
+    <pre><code><span class="out">'C:\\Users\\91842\\100-days-of-python\\day9-builtins'</span></code></pre>
+    <pre><code>os.listdir()    <span class="comment"># Lists all files and folders in the current directory</span></code></pre>
+    <p>Example output:</p>
+    <pre><code><span class="out">['.ipynb_checkpoints', 'built-in-functions.ipynb', 'built-in-modules.ipynb']</span></code></pre>
+    <p><strong>Important Points:</strong></p>
+    <ul>
+      <li><code>os.getcwd()</code> → "get current working directory" — shows where your script/notebook is running from.</li>
+      <li><code>os.listdir()</code> → lists contents (files + folders) of a directory (defaults to current directory if no path is given).</li>
+      <li>The <code>os</code> module also has many other functions (seen while autocompleting in the notebook): <code>os.getenv()</code>, <code>os.getlogin()</code>, <code>os.getpid()</code>, <code>os.getppid()</code>, <code>os.get_exec_path()</code>, <code>os.get_terminal_size()</code>, etc. — these deal with environment variables, process IDs, and terminal info.</li>
+    </ul>
+  </div>
+
+  <h2>Commands / Syntax Summary</h2>
+  <pre><code><span class="comment"># Discover all available modules</span>
+help('modules')
+
+<span class="comment"># Import modules</span>
+import math
+import random
+import os
+import time
+
+<span class="comment"># math module</span>
+math.pi
+math.e
+math.factorial(5)
+math.ceil(6.3)
+math.floor(6.9)
+math.sqrt(100)
+
+<span class="comment"># random module</span>
+random.randint(1, 100)
+random.shuffle(my_list)
+
+<span class="comment"># time module</span>
+time.time()
+time.ctime()
+time.sleep(seconds)
+
+<span class="comment"># os module</span>
+os.getcwd()
+os.listdir()</code></pre>
+
+  <h2>Things to Remember</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Module = code library</strong> (a file of pre-written functions/tools).</li>
+      <li>Always <code>import</code> a module before using its functions — using the exact, correct name.</li>
+      <li><code>help('modules')</code> lists every module available in your current environment (built-in + installed packages).</li>
+      <li><code>math</code> → mathematical constants &amp; operations (<code>pi</code>, <code>e</code>, <code>factorial</code>, <code>ceil</code>, <code>floor</code>, <code>sqrt</code>).</li>
+      <li><code>random</code> → randomness (<code>randint</code> for random integers, <code>shuffle</code> for shuffling a list in place).</li>
+      <li><code>time</code> → time-related operations (<code>time()</code> for timestamp, <code>ctime()</code> for readable time, <code>sleep()</code> to pause execution).</li>
+      <li><code>os</code> → operating system interaction (<code>getcwd()</code> for current directory, <code>listdir()</code> to list directory contents).</li>
+      <li>A wrong/misspelled module name → <code>ModuleNotFoundError: No module named '...'</code>.</li>
+    </ul>
+  </div>
+
+  <h2>Quick Revision</h2>
+  <p>Python modules are reusable code libraries. Use <code>help('modules')</code> to see all available ones, and <code>import &lt;module_name&gt;</code> to bring one into your program. Four commonly used built-in modules:</p>
+  <ul>
+    <li><strong><code>math</code></strong> — constants (<code>pi</code>, <code>e</code>) and operations (<code>factorial</code>, <code>ceil</code>, <code>floor</code>, <code>sqrt</code>).</li>
+    <li><strong><code>random</code></strong> — <code>randint(a, b)</code> for random integers, <code>shuffle(list)</code> to randomize a list in place.</li>
+    <li><strong><code>time</code></strong> — <code>time()</code> for a raw timestamp, <code>ctime()</code> for a readable date/time, <code>sleep(n)</code> to pause execution for <code>n</code> seconds.</li>
+    <li><strong><code>os</code></strong> — <code>getcwd()</code> to get the current directory, <code>listdir()</code> to list files/folders in it.</li>
+  </ul>
+  <p>If you import something that doesn't exist, Python throws <code>ModuleNotFoundError: No module named '&lt;name&gt;'</code> — always double-check spelling.</p>
+
+  <footer>
+    <a class="back" href="../index.html">&larr; Back to course index</a>
+    <span class="tag">Python with Dutta</span>
+  </footer>
+
+</div>
+</body>
+</html>
